@@ -1,7 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using MotoPOS.API.Data;
+using MotoPOS.API.Interfaces.Productos;
+using MotoPOS.API.Repositories.Productos;
+using MotoPOS.API.Services.Productos;
+
 var builder = WebApplication.CreateBuilder(args);
 
+// Base de datos
 builder.Services.AddDbContext<MotoPOSDbContext>(options =>
 {
     options.UseMySql(
@@ -9,40 +14,31 @@ builder.Services.AddDbContext<MotoPOSDbContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
 });
-builder.Services.AddOpenApi();
+
+// Controllers
+builder.Services.AddControllers();
+
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Inyección de dependencias
+builder.Services.AddScoped<IProductRepository, ProductoRepository>();
+builder.Services.AddScoped<IProductService, ProductoService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -137,3 +137,7 @@ C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\refint\MotoPOS
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.pdb
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.genruntimeconfig.cache
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\ref\MotoPOS.API.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.sourcelink.json
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
