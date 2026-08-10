@@ -1,8 +1,13 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using MotoPOS.API.Data;
+using MotoPOS.API.Interfaces.Clientes;
 using MotoPOS.API.Interfaces.Productos;
 using MotoPOS.API.Repositories.Productos;
 using MotoPOS.API.Services.Productos;
+using MotoPOS.API.Validators;
+using MotoPOS.API.Repositories.Clientes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +22,8 @@ builder.Services.AddDbContext<MotoPOSDbContext>(options =>
 
 // Controllers
 builder.Services.AddControllers();
-
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CrearProductoValidator>();
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,6 +31,7 @@ builder.Services.AddSwaggerGen();
 // Inyección de dependencias
 builder.Services.AddScoped<IProductRepository, ProductoRepository>();
 builder.Services.AddScoped<IProductService, ProductoService>();
+builder.Services.AddScoped<IClientRepository, ClienteRepository>();
 
 var app = builder.Build();
 

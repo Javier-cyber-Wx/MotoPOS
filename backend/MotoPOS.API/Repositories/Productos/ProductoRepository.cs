@@ -46,5 +46,22 @@ namespace MotoPOS.API.Repositories.Productos
 
             await _context.SaveChangesAsync();
         }
+        public async Task<bool> ExistsByCodigoAsync(string codigo)
+        {
+            return await _context.Productos.AnyAsync(p => p.Codigo == codigo);
+        }
+        public async Task<bool> MarcaExistsAsync(int marcaId)
+        {
+            return await _context.Marcas.AnyAsync(m => m.Id == marcaId);
+        }
+        public async Task<bool> CategoriaExistsAsync(int categoriaId)
+        {
+            return await _context.Categorias.AnyAsync(c => c.Id == categoriaId);
+        }
+        public async Task<bool> ExistsByCodigoExceptIdAsync(string codigo, int id)
+        {
+            return await _context.Productos
+                .AnyAsync(p => p.Codigo == codigo && p.Id != id);
+        }
     }
 }

@@ -141,3 +141,6 @@ C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.so
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\FluentValidation.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\FluentValidation.AspNetCore.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll

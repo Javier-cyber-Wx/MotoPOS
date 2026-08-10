@@ -54,9 +54,22 @@ namespace MotoPOS.API.Services.Productos
                 Activo = producto.Activo
             };
         }
-
         public async Task<ProductoDTO> CreateAsync(CrearProductoDto dto)
         {
+            var codigoExistente = await _repository.ExistsByCodigoAsync(dto.Codigo);
+            var MarcaExiste = await _repository.MarcaExistsAsync(dto.MarcaId);
+
+            if (codigoExistente)
+                throw new InvalidOperationException(
+                    "Ya existe un producto con el mismo código.");
+            if(!MarcaExiste)
+                throw new InvalidOperationException(
+                    "No existe la marca especificada.");
+            var categoriaExiste = await _repository.CategoriaExistsAsync(dto.CategoriaId);
+            if(!categoriaExiste)
+                throw new InvalidOperationException(
+                    "No existe la categoría especificada.");
+
             var producto = new Producto
             {
                 Codigo = dto.Codigo,
@@ -73,15 +86,31 @@ namespace MotoPOS.API.Services.Productos
             producto = await _repository.CreateAsync(producto);
 
             return await GetByIdAsync(producto.Id)
-                   ?? throw new Exception("No se pudo recuperar el producto creado.");
+                   ?? throw new Exception(
+                       "No se pudo recuperar el producto creado.");
         }
-
         public async Task<bool> UpdateAsync(int id, ActualizarProductoDto dto)
         {
             var producto = await _repository.GetByIdAsync(id);
 
             if (producto == null)
                 return false;
+
+            var codigoExistente = await _repository
+                .ExistsByCodigoExceptIdAsync(dto.Codigo, id);
+            if (codigoExistente)
+                throw new InvalidOperationException(
+                    "Ya existe un producto con el mismo código.");
+
+            var marcaExiste = await _repository.MarcaExistsAsync(dto.MarcaId);
+            if (!marcaExiste)
+                throw new InvalidOperationException(
+                    "No existe la marca especificada.");
+
+            var categoriaExiste = await _repository.CategoriaExistsAsync(dto.CategoriaId);
+            if (!categoriaExiste)
+                throw new InvalidOperationException(
+                    "No existe la categoría especificada.");
 
             producto.Codigo = dto.Codigo;
             producto.Nombre = dto.Nombre;
@@ -95,8 +124,7 @@ namespace MotoPOS.API.Services.Productos
             await _repository.UpdateAsync(producto);
 
             return true;
-        }
-
+        } 
         public async Task<bool> DeleteAsync(int id)
         {
             var producto = await _repository.GetByIdAsync(id);
@@ -107,6 +135,6 @@ namespace MotoPOS.API.Services.Productos
             await _repository.DeleteAsync(producto);
 
             return true;
-        }
+        } 
     }
 }
