@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MotoPOS.API.DTOs.Productos;
 using MotoPOS.API.Interfaces.Productos;
 
-namespace MotoPOS.API.Controllers
+namespace MotoPOS.API.Controllers.Productos
 {
     [ApiController]
     [Route("api/[controller]")]

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MotoPOS.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf6715cbde20ce6501b891dfc9255a80739ea5b5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8d307b653066474fde44b0b8cc1c3d7e6889875")]
 [assembly: System.Reflection.AssemblyProductAttribute("MotoPOS.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MotoPOS.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

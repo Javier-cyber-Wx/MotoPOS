@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using MotoPOS.API.Data;
 using MotoPOS.API.Interfaces.Clientes;
 using MotoPOS.API.Interfaces.Productos;
+using MotoPOS.API.Repositories.Clientes;
 using MotoPOS.API.Repositories.Productos;
+using MotoPOS.API.Services.Clientes;
 using MotoPOS.API.Services.Productos;
 using MotoPOS.API.Validators;
-using MotoPOS.API.Repositories.Clientes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProductRepository, ProductoRepository>();
 builder.Services.AddScoped<IProductService, ProductoService>();
 builder.Services.AddScoped<IClientRepository, ClienteRepository>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 var app = builder.Build();
 
