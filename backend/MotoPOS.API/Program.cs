@@ -9,6 +9,9 @@ using MotoPOS.API.Repositories.Productos;
 using MotoPOS.API.Services.Clientes;
 using MotoPOS.API.Services.Productos;
 using MotoPOS.API.Validators;
+using MotoPOS.API.Interfaces.Proveedores;
+using MotoPOS.API.Repositories.Proveedores;
+using MotoPOS.API.Services.Proveedores; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +37,8 @@ builder.Services.AddScoped<IProductRepository, ProductoRepository>();
 builder.Services.AddScoped<IProductService, ProductoService>();
 builder.Services.AddScoped<IClientRepository, ClienteRepository>();
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+builder.Services.AddScoped<IProveedorService, ProveedorService>();  
 
 var app = builder.Build();
 

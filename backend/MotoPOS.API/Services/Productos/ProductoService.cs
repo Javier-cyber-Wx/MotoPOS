@@ -1,7 +1,6 @@
 ﻿using MotoPOS.API.DTOs.Productos;
 using MotoPOS.API.Entities.Catalogos;
 using MotoPOS.API.Interfaces.Productos;
-using MotoPOS.API.Repositories.Productos;
 
 namespace MotoPOS.API.Services.Productos
 {
