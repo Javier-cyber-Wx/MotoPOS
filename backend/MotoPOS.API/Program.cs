@@ -11,7 +11,10 @@ using MotoPOS.API.Services.Productos;
 using MotoPOS.API.Validators;
 using MotoPOS.API.Interfaces.Proveedores;
 using MotoPOS.API.Repositories.Proveedores;
-using MotoPOS.API.Services.Proveedores; 
+using MotoPOS.API.Services.Proveedores;
+using MotoPOS.API.Interfaces.Marcas;
+using MotoPOS.API.Repositories.Marcas;
+using MotoPOS.API.Services.Marcas;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CrearProductoValidator>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 // Inyección de dependencias
 builder.Services.AddScoped<IProductRepository, ProductoRepository>();
 builder.Services.AddScoped<IProductService, ProductoService>();
@@ -39,6 +43,8 @@ builder.Services.AddScoped<IClientRepository, ClienteRepository>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();  
+builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
+builder.Services.AddScoped<IMarcaService, MarcaService>();
 
 var app = builder.Build();
 
