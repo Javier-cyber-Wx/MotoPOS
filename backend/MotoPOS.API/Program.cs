@@ -15,6 +15,9 @@ using MotoPOS.API.Services.Proveedores;
 using MotoPOS.API.Interfaces.Marcas;
 using MotoPOS.API.Repositories.Marcas;
 using MotoPOS.API.Services.Marcas;
+using MotoPOS.API.Interfaces.Categorias;
+using MotoPOS.API.Repositories.Categorias;
+using MotoPOS.API.Services.Categorias;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +48,8 @@ builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();  
 builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
 builder.Services.AddScoped<IMarcaService, MarcaService>();
+builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();  
 
 var app = builder.Build();
 
