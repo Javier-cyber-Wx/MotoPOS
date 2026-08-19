@@ -7,7 +7,7 @@ namespace MotoPOS.API.Interfaces.Marcas
         Task<IEnumerable<MarcaDTO>> GetAllAsync();
         Task<MarcaDTO?> GetByIdAsync(int id);
         Task<MarcaDTO> CreateAsync(CrearMarcaDto dto);
-        Task<bool> UpdateAsync(int id, ActualizarMarcaDto dto);
-        Task<bool> DeleteAsync(int id); 
+        Task UpdateAsync(int id, ActualizarMarcaDto dto);
+        Task DeleteAsync(int id); 
     }
 }

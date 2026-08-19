@@ -1,10 +1,13 @@
+using MotoPOS.API.Constants;
 using MotoPOS.API.DTOs.Marcas;  
 using MotoPOS.API.Entities.Catalogos;  
+using MotoPOS.API.Extensions;
 using MotoPOS.API.Interfaces.Marcas;
+using MotoPOS.API.Exceptions;
 
 namespace MotoPOS.API.Services.Marcas
 {
-    public class MarcaService : IMarcaService
+    public class MarcaService : BaseService, IMarcaService
     {
         private readonly IMarcaRepository _repository;
         public MarcaService(IMarcaRepository repository)
@@ -14,12 +17,7 @@ namespace MotoPOS.API.Services.Marcas
         public async Task<IEnumerable<MarcaDTO>> GetAllAsync()
         {
             var marcas = await _repository.GetAllAsync();
-            return marcas.Select(m => new MarcaDTO
-            {
-                Id = m.Id,
-                Nombre = m.Nombre,
-                Activo = m.Activo
-            });
+            return marcas.ToDto();
         }
         public async Task<MarcaDTO?> GetByIdAsync(int id)
         {
@@ -28,19 +26,12 @@ namespace MotoPOS.API.Services.Marcas
             {
                 return null;
             }
-            return new MarcaDTO
-            {
-                Id = marca.Id,
-                Nombre = marca.Nombre,
-                Activo = marca.Activo
-            };
+            return marca.ToDto();
         }
         public async Task<MarcaDTO> CreateAsync(CrearMarcaDto dto)
         {
             var nombreExistente = await _repository.ExistsByNombreAsync(dto.Nombre);
-            if (nombreExistente)
-                throw new InvalidOperationException(
-                    "Ya existe una marca con el mismo nombre.");
+            ValidateDuplicate(nombreExistente, ErrorMessages.Marcas.NombreDuplicado);
             var marca = new Marca
             {
                 Nombre = dto.Nombre,
@@ -48,39 +39,28 @@ namespace MotoPOS.API.Services.Marcas
             };
             marca = await _repository.CreateAsync(marca);
             return await GetByIdAsync(marca.Id)
-                ?? throw new InvalidOperationException(
-                    "No se pudo recuperar la marca creada.");
+                ?? throw new InvalidOperationException(ErrorMessages.Marcas.MarcaNoRecuperada);
         }
-        public async Task<bool> UpdateAsync(int id, ActualizarMarcaDto dto)
+        public async Task UpdateAsync(int id, ActualizarMarcaDto dto)
         {
             var marca = await _repository.GetByIdAsync(id);
-
-            if (marca == null)
-                return false;
+            ValidateEntityExists(marca, ErrorMessages.Marcas.MarcaNoEncontrada);
 
             var nombreExistente = await _repository
                 .ExistsByNombreExceptIdAsync(dto.Nombre, id);
 
-            if (nombreExistente)
-                throw new InvalidOperationException(
-                    "Ya existe otra marca con el mismo nombre.");
+            ValidateDuplicate(nombreExistente, ErrorMessages.Marcas.NombreYaExiste);
 
-            marca.Nombre = dto.Nombre;
-            marca.Activo = dto.Activo;
+            marca!.Nombre = dto.Nombre;
+            marca!.Activo = dto.Activo;
 
             await _repository.UpdateAsync(marca);
-
-            return true;
         }
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var marca = await _repository.GetByIdAsync(id);
-            if (marca == null)
-            {
-                return false;
-            }
-            await _repository.DeleteAsync(marca);
-            return true;
+            ValidateEntityExists(marca, ErrorMessages.Marcas.MarcaNoEncontrada);
+            await _repository.DeleteAsync(marca!);
         }
     }
 }

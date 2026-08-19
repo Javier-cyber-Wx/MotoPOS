@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc; 
+using MotoPOS.API.Controllers.Base;
 using MotoPOS.API.DTOs.Marcas;
 using MotoPOS.API.Interfaces.Marcas;    
 
 namespace MotoPOS.API.Controllers.Marcas
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class MarcasController : ControllerBase
+    public class MarcasController : BaseController
     {
         private readonly IMarcaService _marcaService;
         public MarcasController(IMarcaService marcaService)
@@ -37,12 +37,9 @@ namespace MotoPOS.API.Controllers.Marcas
                 var createdMarca = await _marcaService.CreateAsync(dto);
                 return CreatedAtAction(nameof(GetById), new { id = createdMarca.Id }, createdMarca);
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException ex)
             {
-                return Conflict(new
-                {
-                    message = e.Message
-                }); 
+                return HandleError(ex);
             }
         }
         [HttpPut("{id}")]
@@ -50,30 +47,26 @@ namespace MotoPOS.API.Controllers.Marcas
         {
             try
             {
-                var result = await _marcaService.UpdateAsync(id, dto);
-                if (!result)
-                {
-                    return NotFound();
-                }
+                await _marcaService.UpdateAsync(id, dto);
                 return NoContent();
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException ex)
             {
-                return Conflict(new
-                {
-                    message = e.Message
-                });
+                return HandleError(ex);
             }
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _marcaService.DeleteAsync(id);
-            if (!deleted)
+            try
             {
-                return NotFound();
+                await _marcaService.DeleteAsync(id);
+                return NoContent();
             }
-            return NoContent();
+            catch (InvalidOperationException ex)
+            {
+                return HandleError(ex);
+            }
         }
     }
 }   

@@ -1,10 +1,14 @@
-﻿using MotoPOS.API.DTOs.Productos;
+﻿using MotoPOS.API.Constants;
+using MotoPOS.API.DTOs.Productos;
 using MotoPOS.API.Entities.Catalogos;
+using MotoPOS.API.Extensions;
 using MotoPOS.API.Interfaces.Productos;
+using MotoPOS.API.Services;
+using MotoPOS.API.Exceptions;
 
 namespace MotoPOS.API.Services.Productos
 {
-    public class ProductoService : IProductService
+    public class ProductoService : BaseService, IProductoService
     {
         private readonly IProductRepository _repository;
 
@@ -16,20 +20,7 @@ namespace MotoPOS.API.Services.Productos
         public async Task<IEnumerable<ProductoDTO>> GetAllAsync()
         {
             var productos = await _repository.GetAllAsync();
-
-            return productos.Select(p => new ProductoDTO
-            {
-                Id = p.Id,
-                Codigo = p.Codigo,
-                Nombre = p.Nombre,
-                Marca = p.Marca.Nombre,
-                Categoria = p.Categoria.Nombre,
-                Stock = p.Stock,
-                StockMinimo = p.StockMinimo,
-                PrecioCompra = p.PrecioCompra,
-                PrecioVenta = p.PrecioVenta,
-                Activo = p.Activo
-            });
+            return productos.ToDto();
         }
 
         public async Task<ProductoDTO?> GetByIdAsync(int id)
@@ -39,35 +30,18 @@ namespace MotoPOS.API.Services.Productos
             if (producto == null)
                 return null;
 
-            return new ProductoDTO
-            {
-                Id = producto.Id,
-                Codigo = producto.Codigo,
-                Nombre = producto.Nombre,
-                Marca = producto.Marca.Nombre,
-                Categoria = producto.Categoria.Nombre,
-                Stock = producto.Stock,
-                StockMinimo = producto.StockMinimo,
-                PrecioCompra = producto.PrecioCompra,
-                PrecioVenta = producto.PrecioVenta,
-                Activo = producto.Activo
-            };
+            return producto.ToDto();
         }
         public async Task<ProductoDTO> CreateAsync(CrearProductoDto dto)
         {
             var codigoExistente = await _repository.ExistsByCodigoAsync(dto.Codigo);
-            var MarcaExiste = await _repository.MarcaExistsAsync(dto.MarcaId);
+            ValidateDuplicate(codigoExistente, ErrorMessages.Productos.CodigoDuplicado);
 
-            if (codigoExistente)
-                throw new InvalidOperationException(
-                    "Ya existe un producto con el mismo código.");
-            if(!MarcaExiste)
-                throw new InvalidOperationException(
-                    "No existe la marca especificada.");
+            var marcaExiste = await _repository.MarcaExistsAsync(dto.MarcaId);
+            ValidateExists(marcaExiste, ErrorMessages.Productos.MarcaNoExiste);
+
             var categoriaExiste = await _repository.CategoriaExistsAsync(dto.CategoriaId);
-            if(!categoriaExiste)
-                throw new InvalidOperationException(
-                    "No existe la categoría especificada.");
+            ValidateExists(categoriaExiste, ErrorMessages.Productos.CategoriaNoExiste);
 
             var producto = new Producto
             {
@@ -85,55 +59,39 @@ namespace MotoPOS.API.Services.Productos
             producto = await _repository.CreateAsync(producto);
 
             return await GetByIdAsync(producto.Id)
-                   ?? throw new Exception(
-                       "No se pudo recuperar el producto creado.");
+                   ?? throw new InvalidOperationException(ErrorMessages.Productos.ProductoNoEncontrado);
         }
-        public async Task<bool> UpdateAsync(int id, ActualizarProductoDto dto)
+        public async Task UpdateAsync(int id, ActualizarProductoDto dto)
         {
             var producto = await _repository.GetByIdAsync(id);
-
-            if (producto == null)
-                return false;
+            ValidateEntityExists(producto, ErrorMessages.Productos.ProductoNoEncontrado);
 
             var codigoExistente = await _repository
                 .ExistsByCodigoExceptIdAsync(dto.Codigo, id);
-            if (codigoExistente)
-                throw new InvalidOperationException(
-                    "Ya existe un producto con el mismo código.");
+            ValidateDuplicate(codigoExistente, ErrorMessages.Productos.CodigoDuplicado);
 
             var marcaExiste = await _repository.MarcaExistsAsync(dto.MarcaId);
-            if (!marcaExiste)
-                throw new InvalidOperationException(
-                    "No existe la marca especificada.");
+            ValidateExists(marcaExiste, ErrorMessages.Productos.MarcaNoExiste);
 
             var categoriaExiste = await _repository.CategoriaExistsAsync(dto.CategoriaId);
-            if (!categoriaExiste)
-                throw new InvalidOperationException(
-                    "No existe la categoría especificada.");
+            ValidateExists(categoriaExiste, ErrorMessages.Productos.CategoriaNoExiste);
 
-            producto.Codigo = dto.Codigo;
-            producto.Nombre = dto.Nombre;
-            producto.MarcaId = dto.MarcaId;
-            producto.CategoriaId = dto.CategoriaId;
-            producto.PrecioCompra = dto.PrecioCompra;
-            producto.PrecioVenta = dto.PrecioVenta;
-            producto.StockMinimo = dto.StockMinimo;
-            producto.Activo = dto.Activo;
+            producto!.Codigo = dto.Codigo;
+            producto!.Nombre = dto.Nombre;
+            producto!.MarcaId = dto.MarcaId;
+            producto!.CategoriaId = dto.CategoriaId;
+            producto!.PrecioCompra = dto.PrecioCompra;
+            producto!.PrecioVenta = dto.PrecioVenta;
+            producto!.StockMinimo = dto.StockMinimo;
+            producto!.Activo = dto.Activo;
 
             await _repository.UpdateAsync(producto);
-
-            return true;
-        } 
-        public async Task<bool> DeleteAsync(int id)
+        }
+        public async Task DeleteAsync(int id)
         {
             var producto = await _repository.GetByIdAsync(id);
-
-            if (producto == null)
-                return false;
-
-            await _repository.DeleteAsync(producto);
-
-            return true;
-        } 
+            ValidateEntityExists(producto, ErrorMessages.Productos.ProductoNoEncontrado);
+            await _repository.DeleteAsync(producto!);
+        }
     }
 }

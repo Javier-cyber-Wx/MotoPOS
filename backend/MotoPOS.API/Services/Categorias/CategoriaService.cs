@@ -1,43 +1,35 @@
-﻿using MotoPOS.API.Interfaces.Categorias;
+﻿using MotoPOS.API.Constants;
+using MotoPOS.API.Interfaces.Categorias;
 using MotoPOS.API.Entities.Catalogos;
 using MotoPOS.API.DTOs.Categorias;
+using MotoPOS.API.Extensions;
+using MotoPOS.API.Exceptions;
 
 
 namespace MotoPOS.API.Services.Categorias
 {
-    public class CategoriaService : ICategoriaService
+    public class CategoriaService : BaseService, ICategoriaService
     {
-        public readonly ICategoriaRepository _repository;
+        private readonly ICategoriaRepository _repository;
         public CategoriaService(ICategoriaRepository repository)
         {
             _repository = repository;
         }
-        public async Task<IEnumerable<CategoriaDTO>> GetAllSync()
+        public async Task<IEnumerable<CategoriaDTO>> GetAllAsync()
         {
             var categorias = await _repository.GetAllAsync();
-            return categorias.Select(c => new CategoriaDTO
-            {
-                Id = c.Id,
-                Nombre = c.Nombre,
-                Activo = c.Activo
-            });
+            return categorias.ToDto();
         }
         public async Task<CategoriaDTO?> GetById(int id)
         {
             var categoria = await _repository.GetByIdAsync(id);
             if (categoria == null) return null;
-            return new CategoriaDTO
-            {
-                Id = categoria.Id,
-                Nombre = categoria.Nombre,
-                Activo = categoria.Activo
-            };
+            return categoria.ToDto();
         }
         public async Task<CategoriaDTO> CreateAsync(CrearCategoriaDTO dto)
         {
             var nombreExistente = await _repository.ExistsByNombreAsync(dto.Nombre);
-            if (nombreExistente)
-                throw new InvalidOperationException("Ya existe una categoría con el mismo nombre.");   
+            ValidateDuplicate(nombreExistente, ErrorMessages.Categorias.NombreDuplicado);
             var categoria = new Categoria
             {
                 Nombre = dto.Nombre,
@@ -45,29 +37,25 @@ namespace MotoPOS.API.Services.Categorias
             };
             await _repository.AddAsync(categoria);
             return await GetById(categoria.Id)
-                ?? throw new InvalidOperationException("Error al crear la categoría.");
+                ?? throw new InvalidOperationException(ErrorMessages.Categorias.ErrorCreacion);
         }
-        public async Task<bool> UpdateAsync(int id, ActualizarCategoriaDTO dto)
+        public async Task UpdateAsync(int id, ActualizarCategoriaDTO dto)
         {
             var categoria = await _repository.GetByIdAsync(id);
-            if (categoria == null)
-            {
-                return false;
-            }
+            ValidateEntityExists(categoria, ErrorMessages.Categorias.CategoriaNoEncontrada);
+
             var nombreExistente = await _repository.ExistsByNombreExceptIdAsync(dto.Nombre, id);
-            if (nombreExistente)
-                throw new InvalidOperationException("Ya existe una categoría con el mismo nombre.");
-            categoria.Nombre = dto.Nombre;
-            categoria.Activo = dto.Activo;
+            ValidateDuplicate(nombreExistente, ErrorMessages.Categorias.NombreDuplicado);
+
+            categoria!.Nombre = dto.Nombre;
+            categoria!.Activo = dto.Activo;
             await _repository.UpdateAsync(categoria);
-            return true;
-        }   
-        public async Task<bool> DeleteAsync(int id)
+        }
+        public async Task DeleteAsync(int id)
         {
             var categoria = await _repository.GetByIdAsync(id);
-            if (categoria == null) return false;
-            await _repository.DeleteAsync(categoria);
-            return true;
-        }   
+            ValidateEntityExists(categoria, ErrorMessages.Categorias.CategoriaNoEncontrada);
+            await _repository.DeleteAsync(categoria!);
+        }
     }
 }

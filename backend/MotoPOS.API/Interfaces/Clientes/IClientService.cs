@@ -2,7 +2,7 @@
 
 namespace MotoPOS.API.Interfaces.Clientes
 {
-    public interface IClientService
+    public interface IClienteService
     {
         Task<IEnumerable<ClienteDto>> GetAllAsync();
 
@@ -10,8 +10,8 @@ namespace MotoPOS.API.Interfaces.Clientes
 
         Task<ClienteDto> CreateAsync(CrearClienteDto dto);
 
-        Task<bool> UpdateAsync(int id, ActualizarClienteDto dto);
+        Task UpdateAsync(int id, ActualizarClienteDto dto);
 
-        Task<bool> DeleteAsync(int id);
+        Task DeleteAsync(int id);
     }
 }

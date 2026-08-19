@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using MotoPOS.API.Controllers.Base;
 using MotoPOS.API.DTOs.Proveedores; 
 using MotoPOS.API.Interfaces.Proveedores;
 
 namespace MotoPOS.API.Controllers.Proveedores
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class ProveedoresController : ControllerBase
+    public class ProveedoresController : BaseController
     {
         private readonly IProveedorService _proveedorService;
         public ProveedoresController(IProveedorService proveedorService)
@@ -37,12 +37,9 @@ namespace MotoPOS.API.Controllers.Proveedores
                 var proveedor = await _proveedorService.CreateAsync(dto);
                 return CreatedAtAction(nameof(GetById), new { id = proveedor.Id }, proveedor);
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException ex)
             {
-                return Conflict(new
-                {
-                    message = e.Message
-                });
+                return HandleError(ex);
             }
         }
         [HttpPut("{id}")]
@@ -50,30 +47,26 @@ namespace MotoPOS.API.Controllers.Proveedores
         {
             try
             {
-                var result = await _proveedorService.UpdateAsync(id, dto);
-                if (!result)
-                {
-                    return NotFound();
-                }
+                await _proveedorService.UpdateAsync(id, dto);
                 return NoContent();
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException ex)
             {
-                return Conflict(new
-                {
-                    message = e.Message
-                });
+                return HandleError(ex);
             }
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _proveedorService.DeleteAsync(id);
-            if (!result)
+            try
             {
-                return NotFound();
+                await _proveedorService.DeleteAsync(id);
+                return NoContent();
             }
-            return NoContent();
+            catch (InvalidOperationException ex)
+            {
+                return HandleError(ex);
+            }
         }
     }
 }   

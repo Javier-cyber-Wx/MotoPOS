@@ -1,28 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
+using MotoPOS.API.Controllers.Base;
 using MotoPOS.API.DTOs.Productos;
 using MotoPOS.API.Interfaces.Productos;
 
 namespace MotoPOS.API.Controllers.Productos
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class ProductosController : ControllerBase
+    public class ProductosController : BaseController
     {
-        private readonly IProductService _productService;
-        public ProductosController(IProductService productService)
+        private readonly IProductoService _productoService;
+        public ProductosController(IProductoService productoService)
         {
-            _productService = productService;
+            _productoService = productoService;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetAll()
         {
-            var productos = await _productService.GetAllAsync();
+            var productos = await _productoService.GetAllAsync();
             return Ok(productos);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductoDTO>> GetById(int id)
         {
-            var producto = await _productService.GetByIdAsync(id);
+            var producto = await _productoService.GetByIdAsync(id);
             if (producto == null)
             {
                 return NotFound();
@@ -34,16 +34,12 @@ namespace MotoPOS.API.Controllers.Productos
         {
             try
             {
-
-                var producto = await _productService.CreateAsync(dto);
+                var producto = await _productoService.CreateAsync(dto);
                 return CreatedAtAction(nameof(GetById), new { id = producto.Id }, producto);
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException ex)
             {
-                return Conflict(new
-                {
-                    message = e.Message
-                });
+                return HandleError(ex);
             }
         }
         [HttpPut("{id}")]
@@ -51,30 +47,26 @@ namespace MotoPOS.API.Controllers.Productos
         {
             try
             {
-                var result = await _productService.UpdateAsync(id, dto);
-                if (!result)
-                {
-                    return NotFound();
-                }
+                await _productoService.UpdateAsync(id, dto);
                 return NoContent();
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException ex)
             {
-                return Conflict(new
-                {
-                    message = e.Message
-                }); 
+                return HandleError(ex);
             }
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _productService.DeleteAsync(id);
-            if (!result)
+            try
             {
-                return NotFound();
+                await _productoService.DeleteAsync(id);
+                return NoContent();
             }
-            return NoContent();
+            catch (InvalidOperationException ex)
+            {
+                return HandleError(ex);
+            }
         }
     }
 }

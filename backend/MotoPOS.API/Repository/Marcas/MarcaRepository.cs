@@ -42,19 +42,16 @@ namespace MotoPOS.API.Repositories.Marcas
             await _context.SaveChangesAsync();
         }
 
-        // Nuevo: existe por nombre
         public async Task<bool> ExistsByNombreAsync(string nombre)
         {
             return await _context.Marcas.AnyAsync(m => m.Nombre == nombre);
         }
 
-        // Nuevo: existe por nombre exceptuando un id
         public async Task<bool> ExistsByNombreExceptIdAsync(string nombre, int id)
         {
             return await _context.Marcas.AnyAsync(m => m.Nombre == nombre && m.Id != id);
         }
 
-        // Nuevo: crear y devolver entidad creada
         public async Task<Marca> CreateAsync(Marca marca)
         {
             await _context.Marcas.AddAsync(marca);

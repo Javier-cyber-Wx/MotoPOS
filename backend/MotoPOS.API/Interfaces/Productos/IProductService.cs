@@ -2,7 +2,7 @@ using MotoPOS.API.DTOs.Productos;
 
 namespace MotoPOS.API.Interfaces.Productos;
 
-public interface IProductService
+public interface IProductoService
 {
     Task<IEnumerable<ProductoDTO>> GetAllAsync();
 
@@ -10,7 +10,7 @@ public interface IProductService
 
     Task<ProductoDTO> CreateAsync(CrearProductoDto dto);
 
-    Task<bool> UpdateAsync(int id, ActualizarProductoDto dto);
+    Task UpdateAsync(int id, ActualizarProductoDto dto);
 
-    Task<bool> DeleteAsync(int id);
+    Task DeleteAsync(int id);
 }

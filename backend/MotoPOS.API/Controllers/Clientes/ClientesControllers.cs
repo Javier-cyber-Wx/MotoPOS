@@ -1,28 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MotoPOS.API.Controllers.Base;
 using MotoPOS.API.DTOs.Clientes;
 using MotoPOS.API.Interfaces.Clientes;
 
 namespace MotoPOS.API.Controllers.Clientes;
 
-[ApiController]
 [Route("api/Clientes")]
-public class ClientesController : ControllerBase
+public class ClientesController : BaseController
 {
-    private readonly IClientService _clientService;
-    public ClientesController(IClientService clientService)
+    private readonly IClienteService _clienteService;
+    public ClientesController(IClienteService clienteService)
     {
-        _clientService = clientService;
+        _clienteService = clienteService;
     }
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ClienteDto>>> GetAll()
     {
-        var clientes = await _clientService.GetAllAsync();
+        var clientes = await _clienteService.GetAllAsync();
         return Ok(clientes);    
     }
     [HttpGet("{id}")]
     public async Task<ActionResult<ClienteDto>> GetById(int id)
     {
-        var cliente = await _clientService.GetByIdAsync(id);
+        var cliente = await _clienteService.GetByIdAsync(id);
 
         if (cliente == null)
         {
@@ -36,12 +36,12 @@ public class ClientesController : ControllerBase
     {
         try
         {
-            var cliente = await _clientService.CreateAsync(dto);
+            var cliente = await _clienteService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = cliente.Id }, cliente); 
         }
-        catch (InvalidOperationException e)
+        catch (InvalidOperationException ex)
         {
-            return Conflict(new { message = e.Message });   
+            return HandleError(ex);
         }
     }
     [HttpPut("{id}")]
@@ -51,35 +51,27 @@ public class ClientesController : ControllerBase
     {
         try
         {
-            var result = await _clientService.UpdateAsync(id, dto);
-
-            if (!result)
-            {
-                return NotFound();
-            }
-
+            await _clienteService.UpdateAsync(id, dto);
             return NoContent();
         }
         catch (InvalidOperationException ex)
         {
-            return Conflict(new
-            {
-                message = ex.Message
-            });
+            return HandleError(ex);
         }
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var result = await _clientService.DeleteAsync(id);
-
-        if (!result)
+        try
         {
-            return NotFound();
+            await _clienteService.DeleteAsync(id);
+            return NoContent();
         }
-
-        return NoContent();
+        catch (InvalidOperationException ex)
+        {
+            return HandleError(ex);
+        }
     }
 }
 

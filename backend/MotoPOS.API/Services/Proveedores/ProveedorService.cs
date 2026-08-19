@@ -1,10 +1,14 @@
+using MotoPOS.API.Constants;
 using MotoPOS.API.DTOs.Proveedores; 
 using MotoPOS.API.Entities.Personas;
-using MotoPOS.API.Interfaces.Proveedores;   
+using MotoPOS.API.Extensions;
+using MotoPOS.API.Interfaces.Proveedores;
+using MotoPOS.API.Services;
+using MotoPOS.API.Exceptions;
 
 namespace MotoPOS.API.Services.Proveedores
 {
-    public class ProveedorService : IProveedorService
+    public class ProveedorService : BaseService, IProveedorService
     {
         private readonly IProveedorRepository _repository;
         public ProveedorService(IProveedorRepository repository)
@@ -14,17 +18,7 @@ namespace MotoPOS.API.Services.Proveedores
         public async Task<IEnumerable<ProveedorDto>> GetAllAsync()
         {
             var proveedores = await _repository.GetAllAsync();
-            return proveedores.Select(p => new ProveedorDto
-            {
-                Id = p.Id,
-                Nit = p.Nit,
-                NombreEmpresa = p.NombreEmpresa,
-                NombreContacto = p.NombreContacto,  
-                Direccion = p.Direccion,
-                Telefono = p.Telefono,
-                Correo = p.Correo,
-                Activo = p.Activo
-            });
+            return proveedores.ToDto();
         }
         public async Task<ProveedorDto?> GetByIdAsync(int id)
         {
@@ -33,24 +27,12 @@ namespace MotoPOS.API.Services.Proveedores
             {
                 return null;
             }
-            return new ProveedorDto
-            {
-                Id = proveedor.Id,
-                Nit = proveedor.Nit,
-                NombreEmpresa = proveedor.NombreEmpresa,
-                NombreContacto = proveedor.NombreContacto,
-                Direccion = proveedor.Direccion,
-                Telefono = proveedor.Telefono,
-                Correo = proveedor.Correo,
-                Activo = proveedor.Activo
-            };
+            return proveedor.ToDto();
         }
         public async Task<ProveedorDto> CreateAsync(CrearProveedorDto dto)
         {
             var nitExistente = await _repository.ExistsByNitAsync(dto.Nit);
-            if (nitExistente)
-                throw new InvalidOperationException(
-                    "Ya existe un proveedor con el mismo NIT.");
+            ValidateDuplicate(nitExistente, ErrorMessages.Proveedores.NitDuplicado);
             var proveedor = new Proveedor
             {
                 Nit = dto.Nit,
@@ -62,49 +44,28 @@ namespace MotoPOS.API.Services.Proveedores
                 Activo = true
             };
             var createdProveedor = await _repository.CreateAsync(proveedor);
-            return new ProveedorDto
-            {
-                Id = createdProveedor.Id,
-                Nit = createdProveedor.Nit,
-                NombreEmpresa = createdProveedor.NombreEmpresa,
-                NombreContacto = createdProveedor.NombreContacto,
-                Direccion = createdProveedor.Direccion,
-                Telefono = createdProveedor.Telefono,
-                Correo = createdProveedor.Correo,
-                Activo = createdProveedor.Activo
-            };
+            return createdProveedor.ToDto();
         }
-        public async Task<bool> UpdateAsync(int id, ActualizarProveedorDto dto)
+        public async Task UpdateAsync(int id, ActualizarProveedorDto dto)
         {
             var proveedor = await _repository.GetByIdAsync(id);
-            if (proveedor == null)
-            {
-                return false;
-            }
+            ValidateEntityExists(proveedor, ErrorMessages.Proveedores.ProveedorNoEncontrado);
             var nitExistente = await _repository.ExistsByNitExceptIdAsync(dto.Nit, id);
-            if (nitExistente)
-                throw new InvalidOperationException(
-                    "Ya existe un proveedor con el mismo NIT.");
-            proveedor.Nit = dto.Nit;
-            proveedor.NombreEmpresa = dto.NombreEmpresa;
-            proveedor.NombreContacto = dto.NombreContacto;
-            proveedor.Direccion = dto.Direccion;
-            proveedor.Telefono = dto.Telefono;
-            proveedor.Correo = dto.Correo;
-            proveedor.Activo = dto.Activo;
+            ValidateDuplicate(nitExistente, ErrorMessages.Proveedores.NitDuplicado);
+            proveedor!.Nit = dto.Nit;
+            proveedor!.NombreEmpresa = dto.NombreEmpresa;
+            proveedor!.NombreContacto = dto.NombreContacto;
+            proveedor!.Direccion = dto.Direccion;
+            proveedor!.Telefono = dto.Telefono;
+            proveedor!.Correo = dto.Correo;
+            proveedor!.Activo = dto.Activo;
             await _repository.UpdateAsync(proveedor);
-            return true;
         }
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var proveedor = await _repository.GetByIdAsync(id);
-            if (proveedor == null)
-            {
-                return false;
-            }
-            await _repository.DeleteAsync(proveedor);
-            return true;
+            ValidateEntityExists(proveedor, ErrorMessages.Proveedores.ProveedorNoEncontrado);
+            await _repository.DeleteAsync(proveedor!);
         }
-
     }
 }   

@@ -1,4 +1,5 @@
 using FluentValidation;
+using MotoPOS.API.Constants;
 using MotoPOS.API.DTOs.Productos;
 
 namespace MotoPOS.API.Validators
@@ -9,36 +10,36 @@ namespace MotoPOS.API.Validators
         {
             RuleFor(x => x.Codigo)
                 .NotEmpty()
-                .WithMessage("El código del producto es obligatorio.")
+                .WithMessage(ValidationMessages.Productos.CodigoRequerido)
                 .MaximumLength(50)
-                .WithMessage("El código del producto no puede exceder los 50 caracteres.");
+                .WithMessage(ValidationMessages.Productos.CodigoMaximo);
             RuleFor(x => x.Nombre)
                 .NotEmpty()
-                .WithMessage("El nombre del producto es obligatorio.")
+                .WithMessage(ValidationMessages.Productos.NombreRequerido)
                 .MaximumLength(150)
-                .WithMessage("El nombre del producto no puede exceder los 150 caracteres.");
+                .WithMessage(ValidationMessages.Productos.NombreMaximo);
             RuleFor(x => x.MarcaId)
                 .NotEmpty()
                 .GreaterThan(0)
-                .WithMessage("El ID de la marca del producto es obligatorio.");
+                .WithMessage(ValidationMessages.Productos.MarcaIdRequerido);
             RuleFor(x => x.CategoriaId)
                 .NotEmpty()
                 .GreaterThan(0)
-                .WithMessage("El ID de la categoría del producto es obligatorio.");
+                .WithMessage(ValidationMessages.Productos.CategoriaIdRequerido);
             RuleFor(x => x.PrecioCompra)
                 .NotEmpty()
-                .WithMessage("El precio de compra del producto es obligatorio.")
+                .WithMessage(ValidationMessages.Productos.PrecioCompraRequerido)
                 .GreaterThan(0)
-                .WithMessage("El precio de compra del producto debe ser un valor positivo.");
+                .WithMessage(ValidationMessages.Productos.PrecioCompraPositivo);
             RuleFor(x => x.PrecioVenta)
                 .NotEmpty()
-                .WithMessage("El precio de venta del producto es obligatorio.")
+                .WithMessage(ValidationMessages.Productos.PrecioVentaRequerido)
                 .GreaterThan(0)
-                .WithMessage("El precio de venta del producto debe ser un valor positivo.");
+                .WithMessage(ValidationMessages.Productos.PrecioVentaPositivo);
             RuleFor(x => x.StockMinimo)
                 .NotEmpty()
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("El stock mínimo del producto no debe ser negativo");
+                .WithMessage(ValidationMessages.Productos.StockMinimoNoNegativo);
         }
 
     }
