@@ -10,7 +10,7 @@ public interface IProductoService
 
     Task<ProductoDTO> CreateAsync(CrearProductoDto dto);
 
-    Task UpdateAsync(int id, ActualizarProductoDto dto);
+    Task UpdateAsync(int id, ActualizarProductoDTO dto);
 
     Task DeleteAsync(int id);
 }

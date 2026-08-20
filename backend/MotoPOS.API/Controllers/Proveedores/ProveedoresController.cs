@@ -43,7 +43,7 @@ namespace MotoPOS.API.Controllers.Proveedores
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, ActualizarProveedorDto dto)
+        public async Task<IActionResult> Update(int id, ActualizarProveedorDTO dto)
         {
             try
             {

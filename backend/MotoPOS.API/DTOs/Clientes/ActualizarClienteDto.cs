@@ -1,6 +1,6 @@
 ﻿namespace MotoPOS.API.DTOs.Clientes
 {
-    public class ActualizarClienteDto
+    public class ActualizarClienteDTO
     {
         public string Nit { get; set; } = string.Empty;
 

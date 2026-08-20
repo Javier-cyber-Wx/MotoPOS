@@ -54,7 +54,7 @@ public class ClienteService : BaseService, IClienteService
                ?? throw new InvalidOperationException(ErrorMessages.Clientes.ClienteNoRecuperado);
     }
 
-    public async Task UpdateAsync(int id, ActualizarClienteDto dto)
+    public async Task UpdateAsync(int id, ActualizarClienteDTO dto)
     {
         var cliente = await _repository.GetByIdAsync(id);
         ValidateEntityExists(cliente, ErrorMessages.Clientes.ClienteNoEncontrado);

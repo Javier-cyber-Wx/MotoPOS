@@ -1,6 +1,6 @@
 namespace MotoPOS.API.DTOs.Proveedores
 {
-    public class ActualizarProveedorDto
+    public class ActualizarProveedorDTO
     {
         public string Nit { get; set; } = string.Empty;
         public string NombreEmpresa { get; set; } = string.Empty;

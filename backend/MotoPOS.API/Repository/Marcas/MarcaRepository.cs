@@ -20,12 +20,6 @@ namespace MotoPOS.API.Repositories.Marcas
         {
             return await _context.Marcas.FindAsync(id);
         }
-
-        public async Task<Marca?> GetByNombreAsync(string nombre)
-        {
-            return await _context.Marcas.FirstOrDefaultAsync(m => m.Nombre == nombre);
-        }
-
         public async Task AddAsync(Marca marca)
         {
             await _context.Marcas.AddAsync(marca);

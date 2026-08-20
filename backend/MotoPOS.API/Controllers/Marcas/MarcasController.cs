@@ -32,41 +32,22 @@ namespace MotoPOS.API.Controllers.Marcas
         [HttpPost]
         public async Task<ActionResult<MarcaDTO>> Create(CrearMarcaDto dto)
         {
-            try
-            {
                 var createdMarca = await _marcaService.CreateAsync(dto);
                 return CreatedAtAction(nameof(GetById), new { id = createdMarca.Id }, createdMarca);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return HandleError(ex);
-            }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, ActualizarMarcaDto dto)
+        public async Task<IActionResult> Update(int id, ActualizarMarcaDTO dto)
         {
-            try
-            {
-                await _marcaService.UpdateAsync(id, dto);
-                return NoContent();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return HandleError(ex);
-            }
+            await _marcaService.UpdateAsync(id, dto);
+            return NoContent();
+
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _marcaService.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return HandleError(ex);
-            }
+
+            await _marcaService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }   

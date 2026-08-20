@@ -41,7 +41,7 @@ namespace MotoPOS.API.Services.Marcas
             return await GetByIdAsync(marca.Id)
                 ?? throw new InvalidOperationException(ErrorMessages.Marcas.MarcaNoRecuperada);
         }
-        public async Task UpdateAsync(int id, ActualizarMarcaDto dto)
+        public async Task UpdateAsync(int id, ActualizarMarcaDTO dto)
         {
             var marca = await _repository.GetByIdAsync(id);
             ValidateEntityExists(marca, ErrorMessages.Marcas.MarcaNoEncontrada);

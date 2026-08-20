@@ -32,41 +32,20 @@ namespace MotoPOS.API.Controllers.Productos
         [HttpPost]
         public async Task<ActionResult<ProductoDTO>> Create(CrearProductoDto dto)
         {
-            try
-            {
-                var producto = await _productoService.CreateAsync(dto);
-                return CreatedAtAction(nameof(GetById), new { id = producto.Id }, producto);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return HandleError(ex);
-            }
+            var producto = await _productoService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = producto.Id }, producto);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, ActualizarProductoDto dto)
+        public async Task<IActionResult> Update(int id, ActualizarProductoDTO dto)
         {
-            try
-            {
-                await _productoService.UpdateAsync(id, dto);
-                return NoContent();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return HandleError(ex);
-            }
+            await _productoService.UpdateAsync(id, dto);
+            return NoContent();
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _productoService.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return HandleError(ex);
-            }
+            await _productoService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

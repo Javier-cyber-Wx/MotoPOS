@@ -7,6 +7,9 @@ C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\MotoPOS.API.ru
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\MotoPOS.API.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\MotoPOS.API.pdb
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\BCrypt-Net-Next.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\FluentValidation.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\FluentValidation.AspNetCore.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Humanizer.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Microsoft.AspNetCore.OpenApi.dll
@@ -42,6 +45,9 @@ C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Microsoft.Open
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Mono.TextTemplating.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\MySqlConnector.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\System.CodeDom.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\System.Composition.AttributedModel.dll
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\System.Composition.Convention.dll
@@ -122,6 +128,7 @@ C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.As
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.csproj.CoreCompileInputs.cache
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.sourcelink.json
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
@@ -137,10 +144,3 @@ C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\refint\MotoPOS
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.pdb
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.genruntimeconfig.cache
 C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\ref\MotoPOS.API.dll
-C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\obj\Debug\net9.0\MotoPOS.API.sourcelink.json
-C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
-C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\FluentValidation.dll
-C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\FluentValidation.AspNetCore.dll
-C:\Users\HP\Desktop\POSMotos\backend\MotoPOS.API\bin\Debug\net9.0\FluentValidation.DependencyInjectionExtensions.dll

@@ -18,11 +18,7 @@ using MotoPOS.API.Services.Marcas;
 using MotoPOS.API.Interfaces.Categorias;
 using MotoPOS.API.Repositories.Categorias;
 using MotoPOS.API.Services.Categorias;
-using MotoPOS.API.DTOs.Productos;
-using MotoPOS.API.DTOs.Clientes;
-using MotoPOS.API.DTOs.Proveedores;
-using MotoPOS.API.DTOs.Marcas;
-using MotoPOS.API.DTOs.Categorias;
+using MotoPOS.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,10 +35,16 @@ builder.Services.AddDbContext<MotoPOSDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CrearProductoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ActualizarProductoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CrearClienteValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ActualizarClienteValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CrearProveedorValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ActualizarProveedorValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CrearMarcaValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ActualizarMarcaValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CrearCategoriaValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ActualizarCategoriaValidator>();
+
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -61,6 +63,7 @@ builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();  
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionMiddleware>(); 
 
 // Pipeline
 if (app.Environment.IsDevelopment())

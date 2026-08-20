@@ -1,6 +1,6 @@
 namespace MotoPOS.API.DTOs.Productos;
 
-public class ActualizarProductoDto
+public class ActualizarProductoDTO
 {
     public string Codigo { get; set; } = string.Empty;
 

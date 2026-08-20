@@ -20,10 +20,6 @@ public class CategoriaRepository : ICategoriaRepository
     {
         return await _context.Categorias.FindAsync(id);
     }
-    public async Task<Categoria?> GetByNombreAsync(string nombre)
-    {
-        return await _context.Categorias.FirstOrDefaultAsync(c => c.Nombre == nombre);
-    }
     public async Task AddAsync(Categoria categoria)
     {
         await _context.Categorias.AddAsync(categoria);

@@ -47,7 +47,7 @@ public class ClientesController : BaseController
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(
         int id,
-        ActualizarClienteDto dto)
+        ActualizarClienteDTO dto)
     {
         try
         {

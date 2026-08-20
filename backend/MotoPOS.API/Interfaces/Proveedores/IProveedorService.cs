@@ -10,7 +10,7 @@ namespace MotoPOS.API.Interfaces.Proveedores
 
         Task<ProveedorDto> CreateAsync(CrearProveedorDto dto);
 
-        Task UpdateAsync(int id, ActualizarProveedorDto dto);
+        Task UpdateAsync(int id, ActualizarProveedorDTO dto);
 
         Task DeleteAsync(int id);
     }

@@ -46,7 +46,7 @@ namespace MotoPOS.API.Services.Proveedores
             var createdProveedor = await _repository.CreateAsync(proveedor);
             return createdProveedor.ToDto();
         }
-        public async Task UpdateAsync(int id, ActualizarProveedorDto dto)
+        public async Task UpdateAsync(int id, ActualizarProveedorDTO dto)
         {
             var proveedor = await _repository.GetByIdAsync(id);
             ValidateEntityExists(proveedor, ErrorMessages.Proveedores.ProveedorNoEncontrado);

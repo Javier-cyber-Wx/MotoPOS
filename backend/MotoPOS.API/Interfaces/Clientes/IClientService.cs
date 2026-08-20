@@ -10,7 +10,7 @@ namespace MotoPOS.API.Interfaces.Clientes
 
         Task<ClienteDto> CreateAsync(CrearClienteDto dto);
 
-        Task UpdateAsync(int id, ActualizarClienteDto dto);
+        Task UpdateAsync(int id, ActualizarClienteDTO dto);
 
         Task DeleteAsync(int id);
     }
