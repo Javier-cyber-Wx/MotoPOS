@@ -1,10 +1,9 @@
 ﻿using MotoPOS.API.Constants;
 using MotoPOS.API.DTOs.Clientes;
 using MotoPOS.API.Entities.Personas;
+using MotoPOS.API.Exceptions;
 using MotoPOS.API.Extensions;
 using MotoPOS.API.Interfaces.Clientes;
-using MotoPOS.API.Services;
-using MotoPOS.API.Exceptions;
 
 namespace MotoPOS.API.Services.Clientes;
 
@@ -51,7 +50,7 @@ public class ClienteService : BaseService, IClienteService
         cliente = await _repository.CreateAsync(cliente);
 
         return await GetByIdAsync(cliente.Id)
-               ?? throw new InvalidOperationException(ErrorMessages.Clientes.ClienteNoRecuperado);
+               ?? throw new NotFoundException(ErrorMessages.Clientes.ClienteNoRecuperado);
     }
 
     public async Task UpdateAsync(int id, ActualizarClienteDTO dto)
@@ -62,7 +61,7 @@ public class ClienteService : BaseService, IClienteService
         var nitExistente = await _repository
             .ExistsByNitExceptIdAsync(dto.Nit, id);
 
-        ValidateDuplicate(nitExistente, ErrorMessages.Clientes.NitYaExiste);
+        ValidateDuplicate(nitExistente, ErrorMessages.Clientes.NitDuplicado);
 
         cliente!.Nit = dto.Nit;
         cliente!.Nombre = dto.Nombre;

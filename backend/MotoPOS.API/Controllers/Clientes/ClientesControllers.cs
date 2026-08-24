@@ -34,44 +34,21 @@ public class ClientesController : BaseController
     [HttpPost]
     public async Task<ActionResult<ClienteDto>> Create(CrearClienteDto dto)
     {
-        try
-        {
-            var cliente = await _clienteService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = cliente.Id }, cliente); 
-        }
-        catch (InvalidOperationException ex)
-        {
-            return HandleError(ex);
-        }
+         var cliente = await _clienteService.CreateAsync(dto);
+         return CreatedAtAction(nameof(GetById), new { id = cliente.Id }, cliente); 
     }
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(
-        int id,
-        ActualizarClienteDTO dto)
+    public async Task<IActionResult> Update(int id, ActualizarClienteDTO dto)
     {
-        try
-        {
-            await _clienteService.UpdateAsync(id, dto);
-            return NoContent();
-        }
-        catch (InvalidOperationException ex)
-        {
-            return HandleError(ex);
-        }
+        await _clienteService.UpdateAsync(id, dto);
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        try
-        {
-            await _clienteService.DeleteAsync(id);
-            return NoContent();
-        }
-        catch (InvalidOperationException ex)
-        {
-            return HandleError(ex);
-        }
+         await _clienteService.DeleteAsync(id);
+         return NoContent();
     }
 }
 

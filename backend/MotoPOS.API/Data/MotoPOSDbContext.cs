@@ -70,7 +70,7 @@ public class MotoPOSDbContext : DbContext
             .IsUnique();
 
         modelBuilder.Entity<Usuario>()
-            .Property(u => u.Contrasena)
+            .Property(u => u.ContrasenaHash)
             .HasMaxLength(255)
             .IsRequired();
 

@@ -3,6 +3,7 @@ using MotoPOS.API.DTOs.Productos;
 using MotoPOS.API.Entities.Catalogos;
 using MotoPOS.API.Extensions;
 using MotoPOS.API.Interfaces.Productos;
+using MotoPOS.API.Exceptions;
 
 namespace MotoPOS.API.Services.Productos
 {
@@ -57,7 +58,7 @@ namespace MotoPOS.API.Services.Productos
             producto = await _repository.CreateAsync(producto);
 
             return await GetByIdAsync(producto.Id)
-                   ?? throw new InvalidOperationException(ErrorMessages.Productos.ProductoNoEncontrado);
+                   ?? throw new NotFoundException(ErrorMessages.Productos.ProductoNoRecuperado);
         }
         public async Task UpdateAsync(int id, ActualizarProductoDTO dto)
         {

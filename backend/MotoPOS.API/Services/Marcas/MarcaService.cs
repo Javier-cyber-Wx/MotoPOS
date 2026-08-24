@@ -39,7 +39,7 @@ namespace MotoPOS.API.Services.Marcas
             };
             marca = await _repository.CreateAsync(marca);
             return await GetByIdAsync(marca.Id)
-                ?? throw new InvalidOperationException(ErrorMessages.Marcas.MarcaNoRecuperada);
+                ?? throw new NotFoundException(ErrorMessages.Marcas.MarcaNoRecuperada);
         }
         public async Task UpdateAsync(int id, ActualizarMarcaDTO dto)
         {
@@ -49,7 +49,7 @@ namespace MotoPOS.API.Services.Marcas
             var nombreExistente = await _repository
                 .ExistsByNombreExceptIdAsync(dto.Nombre, id);
 
-            ValidateDuplicate(nombreExistente, ErrorMessages.Marcas.NombreYaExiste);
+            ValidateDuplicate(nombreExistente, ErrorMessages.Marcas.NombreDuplicado);
 
             marca!.Nombre = dto.Nombre;
             marca!.Activo = dto.Activo;

@@ -3,7 +3,6 @@ using MotoPOS.API.DTOs.Proveedores;
 using MotoPOS.API.Entities.Personas;
 using MotoPOS.API.Extensions;
 using MotoPOS.API.Interfaces.Proveedores;
-using MotoPOS.API.Services;
 using MotoPOS.API.Exceptions;
 
 namespace MotoPOS.API.Services.Proveedores
@@ -44,7 +43,8 @@ namespace MotoPOS.API.Services.Proveedores
                 Activo = true
             };
             var createdProveedor = await _repository.CreateAsync(proveedor);
-            return createdProveedor.ToDto();
+            return await GetByIdAsync(createdProveedor.Id)
+                   ?? throw new NotFoundException(ErrorMessages.Proveedores.ProveedorNoRecuperado);
         }
         public async Task UpdateAsync(int id, ActualizarProveedorDTO dto)
         {

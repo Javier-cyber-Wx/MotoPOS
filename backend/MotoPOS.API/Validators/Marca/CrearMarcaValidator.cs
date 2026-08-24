@@ -2,7 +2,7 @@ using FluentValidation;
 using MotoPOS.API.Constants;
 using MotoPOS.API.DTOs.Marcas;
 
-namespace MotoPOS.API.Validators;
+namespace MotoPOS.API.Validators.Marca;
 
 public class CrearMarcaValidator : AbstractValidator<CrearMarcaDto>
 {

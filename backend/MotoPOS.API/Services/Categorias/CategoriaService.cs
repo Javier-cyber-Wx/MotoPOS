@@ -37,7 +37,7 @@ namespace MotoPOS.API.Services.Categorias
             };
             await _repository.AddAsync(categoria);
             return await GetById(categoria.Id)
-                ?? throw new InvalidOperationException(ErrorMessages.Categorias.ErrorCreacion);
+                ?? throw new NotFoundException("No se pudo recuperar la categoría creada.");
         }
         public async Task UpdateAsync(int id, ActualizarCategoriaDTO dto)
         {

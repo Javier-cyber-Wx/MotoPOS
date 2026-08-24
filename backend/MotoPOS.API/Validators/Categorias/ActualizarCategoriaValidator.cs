@@ -2,7 +2,7 @@ using FluentValidation;
 using MotoPOS.API.Constants;
 using MotoPOS.API.DTOs.Categorias;
 
-namespace MotoPOS.API.Validators
+namespace MotoPOS.API.Validators.Categorias
 {
     public class ActualizarCategoriaValidator : AbstractValidator<ActualizarCategoriaDTO>
     {

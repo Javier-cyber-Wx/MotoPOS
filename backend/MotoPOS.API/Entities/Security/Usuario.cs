@@ -9,7 +9,7 @@ namespace MotoPOS.API.Entities.Security
     {
         public string Nombre { get; set; } = string.Empty;
         public string UsuarioLogin { get; set; } = string.Empty;
-        public string Contrasena { get; set; } = string.Empty;
+        public string ContrasenaHash { get; set; } = string.Empty;
 
         //relación con Rol
         public int RolId { get; set; }

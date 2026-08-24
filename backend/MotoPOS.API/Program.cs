@@ -8,7 +8,6 @@ using MotoPOS.API.Repositories.Clientes;
 using MotoPOS.API.Repositories.Productos;
 using MotoPOS.API.Services.Clientes;
 using MotoPOS.API.Services.Productos;
-using MotoPOS.API.Validators;
 using MotoPOS.API.Interfaces.Proveedores;
 using MotoPOS.API.Repositories.Proveedores;
 using MotoPOS.API.Services.Proveedores;
@@ -19,6 +18,14 @@ using MotoPOS.API.Interfaces.Categorias;
 using MotoPOS.API.Repositories.Categorias;
 using MotoPOS.API.Services.Categorias;
 using MotoPOS.API.Middlewares;
+using MotoPOS.API.Validators.Categorias;
+using MotoPOS.API.Validators.Clientes;
+using MotoPOS.API.Validators.Marca;
+using MotoPOS.API.Validators.Productos;
+using MotoPOS.API.Validators.Proveedores;
+using MotoPOS.API.Interfaces.Usuarios;
+using MotoPOS.API.Repositories.Usuarios;
+using MotoPOS.API.Services.Usuarios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,7 +67,9 @@ builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
 builder.Services.AddScoped<IMarcaService, MarcaService>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
-builder.Services.AddScoped<ICategoriaService, CategoriaService>();  
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>(); 

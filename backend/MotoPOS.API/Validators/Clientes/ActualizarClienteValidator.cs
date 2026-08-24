@@ -2,7 +2,7 @@ using FluentValidation;
 using MotoPOS.API.Constants;
 using MotoPOS.API.DTOs.Clientes;
 
-namespace MotoPOS.API.Validators
+namespace MotoPOS.API.Validators.Clientes
 {
     public class ActualizarClienteValidator : AbstractValidator<ActualizarClienteDTO>
     {
