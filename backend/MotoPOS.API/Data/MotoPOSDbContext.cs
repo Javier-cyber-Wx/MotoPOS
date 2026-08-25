@@ -50,6 +50,8 @@ public class MotoPOSDbContext : DbContext
         modelBuilder.Entity<Rol>()
             .HasIndex(r => r.Nombre)
             .IsUnique();
+        modelBuilder.Entity<Rol>()
+            .HasData(new Rol { Id = 1, Nombre = "Administrador" }, new Rol { Id = 2, Nombre = "Vendedor" });
 
         // ===== USUARIOS =====
         modelBuilder.Entity<Usuario>()

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MotoPOS.API.Controllers.Base;
 using MotoPOS.API.DTOs.Usuarios;
 using MotoPOS.API.Interfaces.Usuarios;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MotoPOS.API.Controllers.Usuarios
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
@@ -14,7 +15,7 @@ namespace MotoPOS.API.Controllers.Usuarios
             _usuarioService = usuarioService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsuarioDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<UsuarioDTO>>> GetAll() 
         {
             var usuarios = await _usuarioService.GetAllAsync();
             return Ok(usuarios);

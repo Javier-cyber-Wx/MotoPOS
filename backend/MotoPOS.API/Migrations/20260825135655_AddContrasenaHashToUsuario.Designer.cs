@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MotoPOS.API.Data;
 
@@ -11,9 +12,11 @@ using MotoPOS.API.Data;
 namespace MotoPOS.API.Migrations
 {
     [DbContext(typeof(MotoPOSDbContext))]
-    partial class MotoPOSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260825135655_AddContrasenaHashToUsuario")]
+    partial class AddContrasenaHashToUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -381,18 +384,6 @@ namespace MotoPOS.API.Migrations
                         .IsUnique();
 
                     b.ToTable("roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Nombre = "Administrador"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Nombre = "Vendedor"
-                        });
                 });
 
             modelBuilder.Entity("MotoPOS.API.Entities.Security.Usuario", b =>
