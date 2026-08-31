@@ -1,7 +1,7 @@
 using MotoPOS.API.Entities.Catalogos;
 
 namespace MotoPOS.API.Interfaces.Productos;
-public interface IProductRepository
+public interface IProductoRepository
 {
     Task<IEnumerable<Producto>> GetAllAsync();
     Task<Producto?> GetByIdAsync(int id);

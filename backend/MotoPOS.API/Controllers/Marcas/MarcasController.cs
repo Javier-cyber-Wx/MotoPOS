@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc; 
 using MotoPOS.API.Controllers.Base;
 using MotoPOS.API.DTOs.Marcas;
@@ -5,6 +6,7 @@ using MotoPOS.API.Interfaces.Marcas;
 
 namespace MotoPOS.API.Controllers.Marcas
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class MarcasController : BaseController
     {
@@ -30,12 +32,14 @@ namespace MotoPOS.API.Controllers.Marcas
             return Ok(marca);
         }
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<MarcaDTO>> Create(CrearMarcaDto dto)
         {
                 var createdMarca = await _marcaService.CreateAsync(dto);
                 return CreatedAtAction(nameof(GetById), new { id = createdMarca.Id }, createdMarca);
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Update(int id, ActualizarMarcaDTO dto)
         {
             await _marcaService.UpdateAsync(id, dto);
@@ -43,6 +47,7 @@ namespace MotoPOS.API.Controllers.Marcas
 
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int id)
         {
 

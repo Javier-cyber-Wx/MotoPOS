@@ -31,18 +31,21 @@ namespace MotoPOS.API.Controllers.Usuarios
             return Ok(usuario);
         }
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<UsuarioDTO>> Create(CrearUsuarioDTO dto)
         {
             var usuario = await _usuarioService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = usuario.Id }, usuario);
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<UsuarioDTO>> Update(int id, ActualizarUsuarioDTO dto)
         {
             await _usuarioService.UpdateAsync(id, dto);
             return NoContent();
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult> Delete(int id)
         {
             await _usuarioService.DeleteAsync(id);

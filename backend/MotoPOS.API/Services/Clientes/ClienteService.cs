@@ -9,9 +9,9 @@ namespace MotoPOS.API.Services.Clientes;
 
 public class ClienteService : BaseService, IClienteService
 {
-    private readonly IClientRepository _repository;
+    private readonly IClienteRepository _repository;
 
-    public ClienteService(IClientRepository repository)
+    public ClienteService(IClienteRepository repository)
     {
         _repository = repository;
     }

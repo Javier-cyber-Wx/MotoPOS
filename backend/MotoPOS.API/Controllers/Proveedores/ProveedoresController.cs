@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MotoPOS.API.Controllers.Base;
 using MotoPOS.API.DTOs.Proveedores; 
@@ -5,6 +6,7 @@ using MotoPOS.API.Interfaces.Proveedores;
 
 namespace MotoPOS.API.Controllers.Proveedores
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class ProveedoresController : BaseController
     {
@@ -30,18 +32,21 @@ namespace MotoPOS.API.Controllers.Proveedores
             return Ok(proveedor);
         }
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<ProveedorDto>> Create(CrearProveedorDto dto)
         {
             var proveedor = await _proveedorService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = proveedor.Id }, proveedor);
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Update(int id, ActualizarProveedorDTO dto)
         {
              await _proveedorService.UpdateAsync(id, dto);
              return NoContent();
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int id)
         {
              await _proveedorService.DeleteAsync(id);

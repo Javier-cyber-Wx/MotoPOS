@@ -9,9 +9,9 @@ namespace MotoPOS.API.Services.Productos
 {
     public class ProductoService : BaseService, IProductoService
     {
-        private readonly IProductRepository _repository;
+        private readonly IProductoRepository _repository;
 
-        public ProductoService(IProductRepository repository)
+        public ProductoService(IProductoRepository repository)
         {
             _repository = repository;
         }

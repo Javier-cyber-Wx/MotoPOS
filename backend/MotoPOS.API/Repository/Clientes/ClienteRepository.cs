@@ -5,7 +5,7 @@ using MotoPOS.API.Interfaces.Clientes;
 
 namespace MotoPOS.API.Repositories.Clientes
 {
-    public class ClienteRepository : IClientRepository
+    public class ClienteRepository : IClienteRepository
     {
         private readonly MotoPOSDbContext _context;
         public ClienteRepository(MotoPOSDbContext context)

@@ -5,7 +5,7 @@ using MotoPOS.API.Interfaces.Productos;
 
 namespace MotoPOS.API.Repositories.Productos
 {
-    public class ProductoRepository : IProductRepository
+    public class ProductoRepository : IProductoRepository
     {
         private readonly MotoPOSDbContext _context;
         public ProductoRepository(MotoPOSDbContext context)

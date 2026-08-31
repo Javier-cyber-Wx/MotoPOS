@@ -70,6 +70,8 @@ public static class ErrorMessages
         public const string CategoriaNoExiste = "No existe la categoría especificada.";
         public const string ProductoNoEncontrado = "No existe el producto con el ID especificado.";
         public const string ProductoNoRecuperado = "No se pudo recuperar el producto creado.";
+        public const string ProductoInactivo = "El prodicto esta inactivo";
+        public const string StockInsuficiente = "El stock es insuficiente para cubrir la cantidad solicitada";
     }
     public static class Clientes
     {
@@ -102,5 +104,9 @@ public static class ErrorMessages
         public const string UsuarioNoRecuperado = "No se pudo recuperar el usuario creado.";
         public const string RolNoExiste = "No existe el rol especificado.";
 
+    }
+    public static class Ventas
+    {
+        public const string VentaNoEncontrada = "No se encontro la venta especificada";
     }
 }

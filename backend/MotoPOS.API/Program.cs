@@ -2,17 +2,19 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MotoPOS.API.Configurations;
 using MotoPOS.API.Data;
 using MotoPOS.API.Interfaces.Auth;
 using MotoPOS.API.Interfaces.Categorias;
 using MotoPOS.API.Interfaces.Clientes;
 using MotoPOS.API.Interfaces.Marcas;
+using MotoPOS.API.Interfaces.Movimiento_Inventario;
 using MotoPOS.API.Interfaces.Productos;
 using MotoPOS.API.Interfaces.Proveedores;
 using MotoPOS.API.Interfaces.Usuarios;
+using MotoPOS.API.Interfaces.Ventas;
 using MotoPOS.API.Middlewares;
 using MotoPOS.API.Repositories.Categorias;
 using MotoPOS.API.Repositories.Clientes;
@@ -20,6 +22,8 @@ using MotoPOS.API.Repositories.Marcas;
 using MotoPOS.API.Repositories.Productos;
 using MotoPOS.API.Repositories.Proveedores;
 using MotoPOS.API.Repositories.Usuarios;
+using MotoPOS.API.Repository.Movimiento_Inventario;
+using MotoPOS.API.Repository.Ventas;
 using MotoPOS.API.Services.Auth;
 using MotoPOS.API.Services.Categorias;
 using MotoPOS.API.Services.Clientes;
@@ -27,6 +31,7 @@ using MotoPOS.API.Services.Marcas;
 using MotoPOS.API.Services.Productos;
 using MotoPOS.API.Services.Proveedores;
 using MotoPOS.API.Services.Usuarios;
+using MotoPOS.API.Services.Ventas;
 using MotoPOS.API.Validators.Categorias;
 using MotoPOS.API.Validators.Clientes;
 using MotoPOS.API.Validators.Marca;
@@ -53,7 +58,7 @@ builder.Services.AddAuthentication(options =>
             ValidIssuer = jwtSettings.Issuer,
             ValidAudience = jwtSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-            ClockSkew = TimeSpan.Zero // Elimina el tiempo de tolerancia para la expiración del token
+            ClockSkew = TimeSpan.Zero 
         };
     });
 // Base de datos
@@ -107,9 +112,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 // Inyección de dependencias
-builder.Services.AddScoped<IProductRepository, ProductoRepository>();
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
-builder.Services.AddScoped<IClientRepository, ClienteRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();  
@@ -121,6 +126,9 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IVentaService, VentaService>();
+builder.Services.AddScoped<IVentaRepository, VentaRepository>();
+builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
 
 var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>(); 
