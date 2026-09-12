@@ -22,6 +22,7 @@ namespace MotoPOS.API.Controllers.Clientes
             return Ok(clientes);
         }
         [HttpGet("{id}")]
+        [Authorize(Roles = "Administrador, Vendedor")]
         public async Task<ActionResult<ClienteDto>> GetById(int id)
         {
             var cliente = await _clienteService.GetByIdAsync(id);
@@ -34,14 +35,14 @@ namespace MotoPOS.API.Controllers.Clientes
             return Ok(cliente);
         }
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador, Vendedor")]
         public async Task<ActionResult<ClienteDto>> Create(CrearClienteDto dto)
         {
             var cliente = await _clienteService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = cliente.Id }, cliente);
         }
         [HttpPut("{id}")]
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador, Vendedor")]
         public async Task<IActionResult> Update(int id, ActualizarClienteDTO dto)
         {
             await _clienteService.UpdateAsync(id, dto);
@@ -49,7 +50,7 @@ namespace MotoPOS.API.Controllers.Clientes
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admministrador")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int id)
         {
             await _clienteService.DeleteAsync(id);

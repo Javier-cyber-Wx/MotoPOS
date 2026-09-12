@@ -109,4 +109,12 @@ public static class ErrorMessages
     {
         public const string VentaNoEncontrada = "No se encontro la venta especificada";
     }
+    public static class Compras
+    {
+        public const string CompraNoEncontrada = "No se encontro la compra especificada";
+    }
+    public static class MovimientosInventario
+    {
+        public const string MovimientoNoEncontrado = "No se encontro el movimiento de inventario especificado";
+    }
 }

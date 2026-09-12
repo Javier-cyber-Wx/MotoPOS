@@ -1,6 +1,7 @@
-﻿using MotoPOS.API.Data;
-using MotoPOS.API.Interfaces.Movimiento_Inventario;
+﻿using Microsoft.EntityFrameworkCore;
+using MotoPOS.API.Data;
 using MotoPOS.API.Entities.Inventario;
+using MotoPOS.API.Interfaces.Movimiento_Inventario;
 
 
 namespace MotoPOS.API.Repository.Movimiento_Inventario
@@ -18,5 +19,17 @@ namespace MotoPOS.API.Repository.Movimiento_Inventario
             await _context.SaveChangesAsync();
             return movimiento;
         }
+        public async Task<IEnumerable<MovimientoInventario>> GetAllAsync()
+        {
+            return await _context.MovimientosInventario
+                            .OrderByDescending(m => m.Fecha)
+                            .ToListAsync();
+        }
+        public async Task<MovimientoInventario?> GetByIdAsync(int id)
+        {
+            return await _context.MovimientosInventario
+                .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
     }
 }

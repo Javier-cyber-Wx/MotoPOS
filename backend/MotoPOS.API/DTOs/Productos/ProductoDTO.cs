@@ -12,13 +12,9 @@ public class ProductoDTO
         public string Categoria { get; set; } = string.Empty;
 
         public int Stock { get; set; }
-
         public int StockMinimo { get; set; }
-
         public decimal PrecioCompra { get; set; }
-
         public decimal PrecioVenta { get; set; }
-
         public bool Activo { get; set; }
 }
 

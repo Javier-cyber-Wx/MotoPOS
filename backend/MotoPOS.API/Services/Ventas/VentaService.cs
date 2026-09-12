@@ -56,7 +56,7 @@ namespace MotoPOS.API.Services.Ventas
                 {
                     throw new NotFoundException(ErrorMessages.Productos.StockInsuficiente);
                 }
-
+                 
                 var subtotal = producto.PrecioVenta * detalle.Cantidad;
                 total += subtotal;
 
@@ -137,6 +137,7 @@ namespace MotoPOS.API.Services.Ventas
             {
                 Id = venta.Id,
                 Total = venta.Total,
+                ClienteId = venta.ClienteId,
                 UsuarioId = venta.UsuarioId,
                 Detalle = venta.Detalles.Select(detalle => new DetalleVentaDto
                 {

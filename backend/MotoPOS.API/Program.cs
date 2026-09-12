@@ -9,6 +9,7 @@ using MotoPOS.API.Data;
 using MotoPOS.API.Interfaces.Auth;
 using MotoPOS.API.Interfaces.Categorias;
 using MotoPOS.API.Interfaces.Clientes;
+using MotoPOS.API.Interfaces.Compras;
 using MotoPOS.API.Interfaces.Marcas;
 using MotoPOS.API.Interfaces.Movimiento_Inventario;
 using MotoPOS.API.Interfaces.Productos;
@@ -22,12 +23,15 @@ using MotoPOS.API.Repositories.Marcas;
 using MotoPOS.API.Repositories.Productos;
 using MotoPOS.API.Repositories.Proveedores;
 using MotoPOS.API.Repositories.Usuarios;
+using MotoPOS.API.Repository.Compras;
 using MotoPOS.API.Repository.Movimiento_Inventario;
 using MotoPOS.API.Repository.Ventas;
 using MotoPOS.API.Services.Auth;
 using MotoPOS.API.Services.Categorias;
 using MotoPOS.API.Services.Clientes;
+using MotoPOS.API.Services.Compras;
 using MotoPOS.API.Services.Marcas;
+using MotoPOS.API.Services.Movimiento_Inventario;
 using MotoPOS.API.Services.Productos;
 using MotoPOS.API.Services.Proveedores;
 using MotoPOS.API.Services.Usuarios;
@@ -129,6 +133,15 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
 builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
+builder.Services.AddScoped<ICompraRepository, CompraRepository>();
+builder.Services.AddScoped<ICompraService, CompraService>();
+builder.Services.AddScoped<
+    IMovimientoInventarioRepository,
+    MovimientoInventarioRepository>();
+
+builder.Services.AddScoped<
+    IMovimientoInventarioService,
+    MovimientoInventarioService>();
 
 var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>(); 
