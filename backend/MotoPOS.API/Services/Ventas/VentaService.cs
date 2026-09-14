@@ -1,6 +1,7 @@
 ﻿using MotoPOS.API.Constants;
 using MotoPOS.API.Data;
 using MotoPOS.API.DTOs.Ventas;
+using MotoPOS.API.Entities.Catalogos;
 using MotoPOS.API.Entities.Inventario;
 using MotoPOS.API.Entities.Ventas;
 using MotoPOS.API.Enums;
@@ -34,43 +35,64 @@ namespace MotoPOS.API.Services.Ventas
             {
                 throw new NotFoundException(ErrorMessages.Clientes.ClienteNoEncontrado);
             }
-
-            var detallesVenta = new List<DetalleVenta>();
-            decimal total = 0;
-
-            foreach (var detalle in dto.Detalles)
-            {
-                var producto = await _productoRepository.GetByIdAsync(detalle.ProductoId);
-
-                if (producto == null)
+            // Agrupar productos repetidos
+            var detallesAgrupados = dto.Detalles
+                .GroupBy(d => d.ProductoId)
+                .Select(g => new
                 {
-                    throw new NotFoundException(ErrorMessages.Productos.ProductoNoEncontrado);
-                }
-
-                if (!producto.Activo)
-                {
-                    throw new NotFoundException(ErrorMessages.Productos.ProductoInactivo);
-                }
-
-                if (producto.Stock < detalle.Cantidad)
-                {
-                    throw new NotFoundException(ErrorMessages.Productos.StockInsuficiente);
-                }
-                 
-                var subtotal = producto.PrecioVenta * detalle.Cantidad;
-                total += subtotal;
-
-                detallesVenta.Add(new DetalleVenta
-                {
-                    ProductoId = producto.Id,
-                    Cantidad = detalle.Cantidad,
-                    PrecioUnitario = producto.PrecioVenta,
-                    Subtotal = subtotal
-                });
-            }
+                    ProductoId = g.Key,
+                    Cantidad = g.Sum(d => d.Cantidad)
+                })
+                .OrderBy(x => x.ProductoId)
+                .ToList();
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var productosBloqueados = new Dictionary<int, Producto>();
+                var detallesVenta = new List<DetalleVenta>();
+                decimal total = 0;
+                // Leer productos y bloquear sus filas
+                foreach (var detalle in detallesAgrupados)
+                {
+                    var producto =
+                        await _productoRepository
+                            .GetByIdForUpdateAsync(detalle.ProductoId);
+
+                    if (producto == null)
+                    {
+                        throw new NotFoundException(
+                            ErrorMessages.Productos.ProductoNoEncontrado);
+                    }
+
+                    if (!producto.Activo)
+                    {
+                        throw new NotFoundException(
+                            ErrorMessages.Productos.ProductoInactivo);
+                    }
+
+                    if (producto.Stock < detalle.Cantidad)
+                    {
+                        throw new StockInsuficienteException(
+                            ErrorMessages.Productos.StockInsuficiente);
+                    }
+
+                    productosBloqueados[producto.Id] = producto;
+
+                    var subtotal =
+                        producto.PrecioVenta * detalle.Cantidad;
+
+                    total += subtotal;
+
+                    detallesVenta.Add(new DetalleVenta
+                    {
+                        ProductoId = producto.Id,
+                        Cantidad = detalle.Cantidad,
+                        PrecioUnitario = producto.PrecioVenta,
+                        Subtotal = subtotal
+                    });
+                }
+
+                // Crear venta
                 var venta = new Venta
                 {
                     ClienteId = dto.ClienteId,
@@ -79,12 +101,17 @@ namespace MotoPOS.API.Services.Ventas
                     Detalles = detallesVenta
                 };
 
-                var ventaCreada = await _ventaRepository.CreateAsync(venta);
+                var ventaCreada =
+                    await _ventaRepository.CreateAsync(venta);
 
+                // Actualizar inventario y registrar movimientos
                 foreach (var detalle in detallesVenta)
                 {
-                    var producto = await _productoRepository.GetByIdAsync(detalle.ProductoId);
-                    producto!.Stock -= detalle.Cantidad;
+                    var producto =
+                        productosBloqueados[detalle.ProductoId];
+
+                    producto.Stock -= detalle.Cantidad;
+
                     await _productoRepository.UpdateAsync(producto);
 
                     var movimiento = new MovimientoInventario
@@ -95,27 +122,34 @@ namespace MotoPOS.API.Services.Ventas
                         Referencia = "Venta",
                         ReferenciaId = ventaCreada.Id,
                         UsuarioId = usuarioId,
-                        Observaciones = $"Salida por venta #{ventaCreada.Id}"
+                        Observaciones =
+                            $"Salida por venta #{ventaCreada.Id}"
                     };
 
-                    await _movimientoInventarioRepository.CreateAsync(movimiento);
+                    await _movimientoInventarioRepository
+                        .CreateAsync(movimiento);
                 }
+
                 await transaction.CommitAsync();
+
                 return new VentaDto
                 {
                     Id = ventaCreada.Id,
                     Total = ventaCreada.Total,
                     ClienteId = ventaCreada.ClienteId,
                     UsuarioId = ventaCreada.UsuarioId,
-                    Detalle = ventaCreada.Detalles.Select(detalle => new DetalleVentaDto
-                    {
-                        Id = detalle.Id,
-                        VentaId = detalle.VentaId,
-                        ProductoId = detalle.ProductoId,
-                        Cantidad = detalle.Cantidad,
-                        PrecioUnitario = detalle.PrecioUnitario,
-                        Subtotal = detalle.Subtotal
-                    }).ToList()
+
+                    Detalle = ventaCreada.Detalles
+                        .Select(detalle => new DetalleVentaDto
+                        {
+                            Id = detalle.Id,
+                            VentaId = detalle.VentaId,
+                            ProductoId = detalle.ProductoId,
+                            Cantidad = detalle.Cantidad,
+                            PrecioUnitario = detalle.PrecioUnitario,
+                            Subtotal = detalle.Subtotal
+                        })
+                        .ToList()
                 };
             }
             catch

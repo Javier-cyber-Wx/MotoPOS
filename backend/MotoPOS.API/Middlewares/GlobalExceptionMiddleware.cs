@@ -32,14 +32,16 @@ namespace MotoPOS.API.Middlewares
                 NotFoundException => HttpStatusCode.NotFound,
                 DuplicateException => HttpStatusCode.Conflict,
                 UnauthorizedException => HttpStatusCode.Unauthorized,
+                StockInsuficienteException => HttpStatusCode.Conflict,
                 InvalidOperationException => HttpStatusCode.BadRequest,
-                _ => HttpStatusCode.InternalServerError
+                _ => HttpStatusCode.InternalServerError 
             };
             var message = exception switch
             {
                 NotFoundException => exception.Message,
                 DuplicateException => exception.Message,
                 UnauthorizedException => exception.Message,
+                StockInsuficienteException => exception.Message,
                 InvalidOperationException => exception.Message,
                 _ => "Ocurrio un error inesperado en el servidor. Por favor, intente nuevamente mas tarde."
             };  

@@ -41,30 +41,42 @@ using MotoPOS.API.Validators.Clientes;
 using MotoPOS.API.Validators.Marca;
 using MotoPOS.API.Validators.Productos;
 using MotoPOS.API.Validators.Proveedores;
+using MotoPOS.API.Validators.Ventas;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+var jwtSettings = builder.Configuration
+    .GetSection("JwtSettings")
+    .Get<JwtSettings>() ?? throw new InvalidOperationException(
+        "La configuración JwtSettings no fue encontrada.");
+if (string.IsNullOrWhiteSpace(jwtSettings.SecretKey))
+{
+    throw new InvalidOperationException("La clave secreta JWT no está configurada.");
+}
+if (Encoding.UTF8.GetByteCount(jwtSettings.SecretKey) < 32)
+{
+    throw new InvalidOperationException("La clave secreta JWT debe tener al menos 32 bytes.");
+}
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddJwtBearer(options =>
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>() ?? throw new InvalidOperationException("La configuracion JwSetting no fue encontrada");
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings.Issuer,
-            ValidAudience = jwtSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-            ClockSkew = TimeSpan.Zero 
-        };
-    });
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+        ClockSkew = TimeSpan.Zero
+    };
+});
 // Base de datos
 builder.Services.AddDbContext<MotoPOSDbContext>(options =>
 {
@@ -86,6 +98,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<CrearMarcaValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ActualizarMarcaValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CrearCategoriaValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ActualizarCategoriaValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CrearVentaValidator>();
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -121,7 +134,7 @@ builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
-builder.Services.AddScoped<IProveedorService, ProveedorService>();  
+builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
 builder.Services.AddScoped<IMarcaService, MarcaService>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
@@ -135,16 +148,13 @@ builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
 builder.Services.AddScoped<ICompraRepository, CompraRepository>();
 builder.Services.AddScoped<ICompraService, CompraService>();
-builder.Services.AddScoped<
-    IMovimientoInventarioRepository,
-    MovimientoInventarioRepository>();
 
 builder.Services.AddScoped<
     IMovimientoInventarioService,
     MovimientoInventarioService>();
 
 var app = builder.Build();
-app.UseMiddleware<GlobalExceptionMiddleware>(); 
+app.UseMiddleware<GlobalExceptionMiddleware>();
 // Pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -152,7 +162,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
-app.UseAuthentication();  
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

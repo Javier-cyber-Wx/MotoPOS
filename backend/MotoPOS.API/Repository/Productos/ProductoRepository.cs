@@ -26,6 +26,16 @@ namespace MotoPOS.API.Repositories.Productos
                 .Include(p => p.Categoria)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+        public async Task<Producto?> GetByIdForUpdateAsync(int id)
+        {
+            return await _context.Productos
+                .FromSqlInterpolated($@"
+            SELECT *
+            FROM productos
+            WHERE Id = {id}
+            FOR UPDATE")
+                .FirstOrDefaultAsync();
+        }
         public async Task<Producto> CreateAsync(Producto producto)
         {
             await _context.Productos.AddAsync(producto);

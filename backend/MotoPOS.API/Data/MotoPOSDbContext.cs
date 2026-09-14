@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using MotoPOS.API.Entities.Base;
 using MotoPOS.API.Entities.Catalogos;
-using MotoPOS.API.Entities.Personas;
-using MotoPOS.API.Entities.Security;
 using MotoPOS.API.Entities.Compras;
 using MotoPOS.API.Entities.Inventario;
+using MotoPOS.API.Entities.Personas;
+using MotoPOS.API.Entities.Security;
 using MotoPOS.API.Entities.Ventas;
 namespace MotoPOS.API.Data;
 
@@ -320,5 +321,54 @@ public class MotoPOSDbContext : DbContext
             .WithMany(p => p.DetallesVenta)
             .HasForeignKey(d => d.ProductoId)
             .OnDelete(DeleteBehavior.Restrict);
+    }
+    public override int SaveChanges()
+    {
+        AplicarAuditoria();
+        return base.SaveChanges();
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        AplicarAuditoria();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override async Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        AplicarAuditoria();
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override async Task<int> SaveChangesAsync(
+        bool acceptAllChangesOnSuccess,
+        CancellationToken cancellationToken = default)
+    {
+        AplicarAuditoria();
+
+        return await base.SaveChangesAsync(
+            acceptAllChangesOnSuccess,
+            cancellationToken);
+    }
+
+    private void AplicarAuditoria()
+    {
+        var ahora = DateTime.UtcNow;
+
+        foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreadoEn = ahora;
+                entry.Entity.Modificacion = null;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.CreadoEn = entry.Property(e => e.CreadoEn).OriginalValue;
+                entry.Entity.Modificacion = ahora;
+            }
+        }
     }
 }
