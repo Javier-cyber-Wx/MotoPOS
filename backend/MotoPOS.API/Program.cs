@@ -44,125 +44,134 @@ using MotoPOS.API.Validators.Proveedores;
 using MotoPOS.API.Validators.Ventas;
 using System.Text;
 
-var builder = WebApplication.CreateBuilder(args);
-var jwtSettings = builder.Configuration
-    .GetSection("JwtSettings")
-    .Get<JwtSettings>() ?? throw new InvalidOperationException(
-        "La configuración JwtSettings no fue encontrada.");
-if (string.IsNullOrWhiteSpace(jwtSettings.SecretKey))
-{
-    throw new InvalidOperationException("La clave secreta JWT no está configurada.");
-}
-if (Encoding.UTF8.GetByteCount(jwtSettings.SecretKey) < 32)
-{
-    throw new InvalidOperationException("La clave secreta JWT debe tener al menos 32 bytes.");
-}
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings.Issuer,
-        ValidAudience = jwtSettings.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-        ClockSkew = TimeSpan.Zero
-    };
-});
-// Base de datos
-builder.Services.AddDbContext<MotoPOSDbContext>(options =>
-{
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
-    );
-});
-// Controllers
-builder.Services.AddControllers();
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<CrearProductoValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<ActualizarProductoValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CrearClienteValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<ActualizarClienteValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CrearProveedorValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<ActualizarProveedorValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CrearMarcaValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<ActualizarMarcaValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CrearCategoriaValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<ActualizarCategoriaValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CrearVentaValidator>();
-// Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Ingrese el token JWT"
+namespace MotoPOS.API;
 
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+public class Program
+{
+    public static void Main(string[] args)
     {
+        var builder = WebApplication.CreateBuilder(args);
+
+        var jwtSettings = builder.Configuration
+            .GetSection("JwtSettings")
+            .Get<JwtSettings>() ?? throw new InvalidOperationException(
+                "La configuración JwtSettings no fue encontrada.");
+        if (string.IsNullOrWhiteSpace(jwtSettings.SecretKey))
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
+            throw new InvalidOperationException("La clave secreta JWT no está configurada.");
         }
-    });
-});
-// Inyección de dependencias
-builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
-builder.Services.AddScoped<IProductoService, ProductoService>();
-builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
-builder.Services.AddScoped<IClienteService, ClienteService>();
-builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
-builder.Services.AddScoped<IProveedorService, ProveedorService>();
-builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
-builder.Services.AddScoped<IMarcaService, MarcaService>();
-builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
-builder.Services.AddScoped<ICategoriaService, CategoriaService>();
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IVentaService, VentaService>();
-builder.Services.AddScoped<IVentaRepository, VentaRepository>();
-builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
-builder.Services.AddScoped<ICompraRepository, CompraRepository>();
-builder.Services.AddScoped<ICompraService, CompraService>();
+        if (Encoding.UTF8.GetByteCount(jwtSettings.SecretKey) < 32)
+        {
+            throw new InvalidOperationException("La clave secreta JWT debe tener al menos 32 bytes.");
+        }
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtSettings.Issuer,
+                ValidAudience = jwtSettings.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
+        // Base de datos
+        builder.Services.AddDbContext<MotoPOSDbContext>(options =>
+        {
+            options.UseMySql(
+                builder.Configuration.GetConnectionString("DefaultConnection"),
+                ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+            );
+        });
+        // Controllers
+        builder.Services.AddControllers();
+        builder.Services.AddFluentValidationAutoValidation();
+        builder.Services.AddValidatorsFromAssemblyContaining<CrearProductoValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ActualizarProductoValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CrearClienteValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ActualizarClienteValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CrearProveedorValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ActualizarProveedorValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CrearMarcaValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ActualizarMarcaValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CrearCategoriaValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<ActualizarCategoriaValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CrearVentaValidator>();
+        // Swagger
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Ingrese el token JWT"
 
-builder.Services.AddScoped<
-    IMovimientoInventarioService,
-    MovimientoInventarioService>();
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
+        // Inyección de dependencias
+        builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
+        builder.Services.AddScoped<IProductoService, ProductoService>();
+        builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+        builder.Services.AddScoped<IClienteService, ClienteService>();
+        builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+        builder.Services.AddScoped<IProveedorService, ProveedorService>();
+        builder.Services.AddScoped<IMarcaRepository, MarcaRepository>();
+        builder.Services.AddScoped<IMarcaService, MarcaService>();
+        builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+        builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+        builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+        builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+        builder.Services.AddScoped<IJwtService, JwtService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IVentaService, VentaService>();
+        builder.Services.AddScoped<IVentaRepository, VentaRepository>();
+        builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
+        builder.Services.AddScoped<ICompraRepository, CompraRepository>();
+        builder.Services.AddScoped<ICompraService, CompraService>();
 
-var app = builder.Build();
-app.UseMiddleware<GlobalExceptionMiddleware>();
-// Pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        builder.Services.AddScoped<
+            IMovimientoInventarioService,
+            MovimientoInventarioService>();
+
+        var app = builder.Build();
+        app.UseMiddleware<GlobalExceptionMiddleware>();
+        // Pipeline
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+        app.UseHttpsRedirection();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
+    }
 }
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-app.Run();
