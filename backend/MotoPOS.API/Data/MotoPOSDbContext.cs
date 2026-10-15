@@ -18,6 +18,7 @@ public class MotoPOSDbContext : DbContext
     // Seguridad
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Rol> Roles => Set<Rol>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     // Catálogos
     public DbSet<Marca> Marcas => Set<Marca>();
@@ -81,6 +82,33 @@ public class MotoPOSDbContext : DbContext
             .HasOne(u => u.Rol)
             .WithMany(r => r.Usuarios)
             .HasForeignKey(u => u.RolId);
+
+        // ===== REFRESH TOKENS =====
+        modelBuilder.Entity<RefreshToken>()
+            .ToTable("refresh_tokens");
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.Token)
+            .HasMaxLength(500)
+            .IsRequired();
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(rt => rt.Token)
+            .IsUnique();
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.MotivoRevocacion)
+            .HasMaxLength(200);
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.JwtTokenId)
+            .HasMaxLength(50);
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne(rt => rt.Usuario)
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.UsuarioId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // ===== MARCAS =====
         modelBuilder.Entity<Marca>()

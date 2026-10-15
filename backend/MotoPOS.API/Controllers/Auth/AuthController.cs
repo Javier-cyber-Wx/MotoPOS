@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MotoPOS.API.Controllers.Base;
 using MotoPOS.API.DTOs.Auth;
@@ -14,6 +15,7 @@ namespace MotoPOS.API.Controllers.Auth
         {
             _authService = authService;
         }
+
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponseDTO>> Login(LoginDTO dto)
         {
@@ -21,5 +23,19 @@ namespace MotoPOS.API.Controllers.Auth
             return Ok(response);
         }
 
+        [HttpPost("refresh")]
+        public async Task<ActionResult<RefreshTokenResponseDTO>> RefreshToken(RefreshTokenRequestDTO dto)
+        {
+            var response = await _authService.RefreshTokenAsync(dto);
+            return Ok(response);
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout(LogoutRequestDTO dto)
+        {
+            await _authService.LogoutAsync(dto);
+            return Ok(new { message = "Sesión cerrada exitosamente" });
+        }
     }
 }

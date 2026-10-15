@@ -2,6 +2,7 @@
 using MotoPOS.API.Entities.Compras;
 using MotoPOS.API.Entities.Inventario;
 using MotoPOS.API.Entities.Ventas;
+
 namespace MotoPOS.API.Entities.Security
 
 {
@@ -18,5 +19,6 @@ namespace MotoPOS.API.Entities.Security
         public ICollection<Compra> Compras { get; set; } = new List<Compra>();
         public ICollection<Venta> Ventas { get; set; } = new List<Venta>();
         public ICollection<MovimientoInventario> Movimientos { get; set; } = new List<MovimientoInventario>();
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

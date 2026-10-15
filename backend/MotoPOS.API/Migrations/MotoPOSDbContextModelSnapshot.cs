@@ -362,6 +362,49 @@ namespace MotoPOS.API.Migrations
                     b.ToTable("proveedores", (string)null);
                 });
 
+            modelBuilder.Entity("MotoPOS.API.Entities.Security.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreadoEn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("ExpiraEn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("JwtTokenId")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("MotivoRevocacion")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime?>("RevocadoEn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("refresh_tokens", (string)null);
+                });
+
             modelBuilder.Entity("MotoPOS.API.Entities.Security.Rol", b =>
                 {
                     b.Property<int>("Id")
@@ -589,6 +632,17 @@ namespace MotoPOS.API.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("MotoPOS.API.Entities.Security.RefreshToken", b =>
+                {
+                    b.HasOne("MotoPOS.API.Entities.Security.Usuario", "Usuario")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("MotoPOS.API.Entities.Security.Usuario", b =>
                 {
                     b.HasOne("MotoPOS.API.Entities.Security.Rol", "Rol")
@@ -682,6 +736,8 @@ namespace MotoPOS.API.Migrations
                     b.Navigation("Compras");
 
                     b.Navigation("Movimientos");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("Ventas");
                 });

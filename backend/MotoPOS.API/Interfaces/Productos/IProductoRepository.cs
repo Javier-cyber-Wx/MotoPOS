@@ -4,6 +4,7 @@ namespace MotoPOS.API.Interfaces.Productos;
 public interface IProductoRepository
 {
     Task<IEnumerable<Producto>> GetAllAsync();
+    Task<(IEnumerable<Producto> Items, int TotalCount)> GetPaginatedAsync(int pageNumber, int pageSize);
     Task<Producto?> GetByIdAsync(int id);
     Task<Producto?> GetByIdForUpdateAsync(int id);
     Task<Producto> CreateAsync(Producto producto);

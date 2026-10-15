@@ -1,0 +1,374 @@
+
+.marcas-page {
+  padding: 32px;
+}
+
+.marcas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.marcas-header h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  color: #111827;
+}
+
+.marcas-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.marcas-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.marcas-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.marcas-card-header h2 {
+  margin: 0 0 5px;
+  font-size: 17px;
+  color: #111827;
+}
+
+.marcas-card-header span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.marcas-table-container {
+  overflow-x: auto;
+}
+
+.marcas-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.marcas-table th {
+  padding: 13px 20px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.marcas-table td {
+  padding: 15px 20px;
+  font-size: 14px;
+  color: #374151;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.marcas-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.marca-nombre {
+  font-weight: 600;
+  color: #111827 !important;
+}
+
+.estado-activo,
+.estado-inactivo {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.estado-activo {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.estado-inactivo {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.marca-acciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-accion {
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-editar {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+}
+
+.btn-editar:hover {
+  background: #f9fafb;
+}
+
+.btn-desactivar {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.btn-desactivar:hover {
+  background: #fee2e2;
+}
+
+.btn-activar {
+  border: 1px solid #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.btn-activar:hover {
+  background: #dcfce7;
+}
+
+.marcas-message {
+  padding: 50px 20px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.marcas-success,
+.marcas-error {
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border-radius: 7px;
+  font-size: 14px;
+}
+
+.marcas-success {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+}
+
+.marcas-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.marca-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.marca-modal {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.marca-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.marca-modal-header h2 {
+  margin: 0 0 5px;
+  font-size: 19px;
+  color: #111827;
+}
+
+.marca-modal-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 3px;
+}
+
+.modal-close:hover {
+  color: #111827;
+}
+
+.marca-modal form {
+  padding: 24px;
+}
+
+.marca-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  color: #111827;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.marca-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  border: 1px solid #f97316;
+  background: #f97316;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #ea580c;
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background: #f9fafb;
+}
+
+@media (max-width: 700px) {
+  .marcas-page {
+    padding: 20px;
+  }
+
+  .marcas-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .marca-form {
+    grid-template-columns: 1fr;
+  }
+
+  .marca-acciones {
+    flex-wrap: wrap;
+  }
+}
+
+.marcas-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.marcas-toolbar input {
+  width: min(100%, 420px);
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+}
+
+.marcas-toolbar input:focus {
+  outline: 2px solid var(--primary, #2563eb);
+  outline-offset: 1px;
+}
+
+.marcas-toolbar span {
+  color: var(--text-secondary, #6b7280);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .marcas-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .marcas-toolbar input {
+    width: 100%;
+  }
+}

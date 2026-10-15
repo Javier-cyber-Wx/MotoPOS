@@ -23,6 +23,7 @@ using MotoPOS.API.Repositories.Marcas;
 using MotoPOS.API.Repositories.Productos;
 using MotoPOS.API.Repositories.Proveedores;
 using MotoPOS.API.Repositories.Usuarios;
+using MotoPOS.API.Repository.Auth;
 using MotoPOS.API.Repository.Compras;
 using MotoPOS.API.Repository.Movimiento_Inventario;
 using MotoPOS.API.Repository.Ventas;
@@ -56,6 +57,7 @@ public class Program
             .GetSection("JwtSettings")
             .Get<JwtSettings>() ?? throw new InvalidOperationException(
                 "La configuración JwtSettings no fue encontrada.");
+
         if (string.IsNullOrWhiteSpace(jwtSettings.SecretKey))
         {
             throw new InvalidOperationException("La clave secreta JWT no está configurada.");
@@ -84,6 +86,21 @@ public class Program
                 ClockSkew = TimeSpan.Zero
             };
         });
+
+        // CORS
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigins", policy =>
+            {
+                policy
+                    .WithOrigins(
+                        builder.Configuration["FRONTEND_URL"] ?? "http://localhost:5173"
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+
         // Base de datos
         builder.Services.AddDbContext<MotoPOSDbContext>(options =>
         {
@@ -135,6 +152,9 @@ public class Program
                 }
             });
         });
+
+        // Health Checks básico
+        builder.Services.AddHealthChecks();
         // Inyección de dependencias
         builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
         builder.Services.AddScoped<IProductoService, ProductoService>();
@@ -150,6 +170,7 @@ public class Program
         builder.Services.AddScoped<IUsuarioService, UsuarioService>();
         builder.Services.AddScoped<IJwtService, JwtService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         builder.Services.AddScoped<IVentaService, VentaService>();
         builder.Services.AddScoped<IVentaRepository, VentaRepository>();
         builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
@@ -161,17 +182,27 @@ public class Program
             MovimientoInventarioService>();
 
         var app = builder.Build();
+
         app.UseMiddleware<GlobalExceptionMiddleware>();
-        // Pipeline
+
+        // Swagger
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseCors("AllowSpecificOrigins");
+
         app.UseHttpsRedirection();
+
         app.UseAuthentication();
+        app.UseMiddleware<TokenValidationMiddleware>();
         app.UseAuthorization();
+
         app.MapControllers();
-        app.Run();
+        app.MapHealthChecks("/health");
+
+        app.Run();  
     }
 }

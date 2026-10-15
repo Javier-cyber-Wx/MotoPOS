@@ -19,6 +19,21 @@ namespace MotoPOS.API.Repositories.Productos
                 .Include(p => p.Categoria)
                 .ToListAsync();
         }
+
+        public async Task<(IEnumerable<Producto> Items, int TotalCount)> GetPaginatedAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Productos
+                .Include(p => p.Marca)
+                .Include(p => p.Categoria);
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
         public async Task<Producto?> GetByIdAsync(int id)
         {
             return await _context.Productos

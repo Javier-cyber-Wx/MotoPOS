@@ -1,4 +1,5 @@
 ﻿using MotoPOS.API.Constants;
+using MotoPOS.API.DTOs;
 using MotoPOS.API.DTOs.Productos;
 using MotoPOS.API.Entities.Catalogos;
 using MotoPOS.API.Extensions;
@@ -20,6 +21,20 @@ namespace MotoPOS.API.Services.Productos
         {
             var productos = await _repository.GetAllAsync();
             return productos.ToDto();
+        }
+
+        public async Task<PaginatedResponseDTO<ProductoDTO>> GetPaginatedAsync(int pageNumber, int pageSize)
+        {
+            var (productos, totalCount) = await _repository.GetPaginatedAsync(pageNumber, pageSize);
+            var productosDto = productos.ToDto();
+
+            return new PaginatedResponseDTO<ProductoDTO>
+            {
+                Data = productosDto,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task<ProductoDTO?> GetByIdAsync(int id)

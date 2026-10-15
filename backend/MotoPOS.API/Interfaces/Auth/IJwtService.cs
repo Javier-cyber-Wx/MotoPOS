@@ -4,6 +4,8 @@ namespace MotoPOS.API.Interfaces.Auth
 {
     public interface IJwtService
     {
-        string GenerateToken(Usuario usuario);
+        string GenerateAccessToken(Usuario usuario);
+        string GenerateRefreshToken();
+        string GetJwtTokenId(string token);
     }
 }

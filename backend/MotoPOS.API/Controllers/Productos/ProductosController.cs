@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MotoPOS.API.Controllers.Base;
+using MotoPOS.API.DTOs;
 using MotoPOS.API.DTOs.Productos;
 using MotoPOS.API.Interfaces.Productos;
 
@@ -20,6 +21,13 @@ namespace MotoPOS.API.Controllers.Productos
         {
             var productos = await _productoService.GetAllAsync();
             return Ok(productos);
+        }
+
+        [HttpGet("paginated")]
+        public async Task<ActionResult<PaginatedResponseDTO<ProductoDTO>>> GetPaginated([FromQuery] PaginationDTO pagination)
+        {
+            var result = await _productoService.GetPaginatedAsync(pagination.PageNumber, pagination.PageSize);
+            return Ok(result);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductoDTO>> GetById(int id)
